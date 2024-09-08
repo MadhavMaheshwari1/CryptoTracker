@@ -25,6 +25,7 @@ body {
 .checkbox {
   opacity: 0;
   position: absolute;
+  pointer-events: none;
 }
 
 .checkbox-label {
@@ -35,8 +36,8 @@ body {
   border-radius: 40px;
   border: 3px solid rgba(0, 0, 0, 0.372);
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
 
 .ball {
@@ -48,13 +49,54 @@ body {
   left: 0px;
   top: 0px;
   transition: transform 0.2s linear;
+  /* Ensure transition is applied */
 }
 
 .checkbox:checked+.checkbox-label .ball {
   transform: translateX(30px);
+  /* Translate when checked */
 }
 
 .ball:hover {
+  box-shadow: 0 0 0px 12px rgba(141, 141, 141, 0.5);
+}
+
+.Checkbox {
+  opacity: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.Checkbox-label {
+  position: relative;
+  padding: 15px 30px;
+  background-color: rgb(218, 218, 218);
+  cursor: pointer;
+  border-radius: 40px;
+  border: 3px solid rgba(0, 0, 0, 0.372);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Ball {
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+  background-color: rgb(255, 255, 255);
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  transition: transform 0.2s linear;
+  /* Ensure transition is applied */
+}
+
+.Checkbox:checked+.Checkbox-label .Ball {
+  transform: translateX(30px);
+  /* Translate when checked */
+}
+
+.Ball:hover {
   box-shadow: 0 0 0px 12px rgba(141, 141, 141, 0.5);
 }
 

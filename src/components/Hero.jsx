@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 const Hero = () => {
     return (
         <div className="max-w-[1920px] mx-auto py-6 px-8 2xl:flex-row flex flex-col mt-4">
-            <div className="2xl:w-[50%] w-full 2xl:text-start text-center h-[720px] flex flex-col 2xl:items-start items-center justify-center gap-4 ">
+            <div className="2xl:w-[50%] w-full 2xl:text-start text-center h-[450px] flex flex-col 2xl:items-start items-center justify-center gap-4 ">
                 <div>
                     <h1 className='font-bold 2xl:text-8xl text-6xl mb-4'>Track Crypto</h1>
                     <h1 className='text-blue-500 font-bold 2xl:text-5xl text-4xl mb-4'>Real Time.</h1>
@@ -19,8 +19,8 @@ const Hero = () => {
             <div className='2xl:w-[50%] w-full flex justify-center h-[85vh]'>
                 {/* <div className="absolute flex justify-center w-full h-full items-center"> */}
                 <div className='h-[700px] relative'>
-                    <div className='absolute w-[90%] h-[600px] bg-gradient-to-b from-blue-300 to-blue-400  rounded-[45px] left-[5rem] top-[7rem]' alt="" ></div>
-                    <img src={IPhone} className='h-[700px] animate rounded-[45px]' style={{ boxShadow: '0px 0px 0px 0px rgba(0, 0, 0, 0.5)' }} alt="" />
+                    <div className='absolute w-[90%] h-[550px] bg-gradient-to-b from-blue-300 to-blue-400  rounded-[45px] left-[5rem] top-[7rem]' alt="" ></div>
+                    <img src={IPhone} className='h-[650px] animate rounded-[45px]' style={{ boxShadow: '0px 0px 0px 0px rgba(0, 0, 0, 0.5)' }} alt="" />
                 </div>
 
                 {/* </div> */}
