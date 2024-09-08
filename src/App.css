@@ -5,3 +5,15 @@
   margin: 0;
   box-sizing: border-box;
 }
+
+:root {
+  --bg-color: #ffffff;
+  /* Light mode background */
+  --text-color: #000000;
+  /* Light mode text */
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
