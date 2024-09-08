@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 const Hero = () => {
     return (
-        <div className="max-w-[1920px] mx-auto py-6 px-8 2xl:flex-row flex flex-col mt-4">
+        <div className="max-w-[1820px] mx-auto py-6 px-8 2xl:flex-row flex flex-col mt-4">
             <div className="2xl:w-[50%] w-full 2xl:text-start text-center h-[450px] flex flex-col 2xl:items-start items-center justify-center gap-4 ">
                 <div>
                     <h1 className='font-bold 2xl:text-8xl text-6xl mb-4'>Track Crypto</h1>
