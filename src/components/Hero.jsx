@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom'
 
 const Hero = () => {
     return (
-        <div className="max-w-[1920px] mx-auto py-6 px-8 2xl:flex-row flex flex-col mt-4 gap-8">
+        <div className="max-w-[1920px] mx-auto py-6 px-8 2xl:flex-row flex flex-col mt-4">
             <div className="2xl:w-[50%] w-full 2xl:text-start text-center h-[720px] flex flex-col 2xl:items-start items-center justify-center gap-4 ">
                 <div>
-                    <h1 className='font-bold lg:text-9xl text-5xl mb-4'>Track Crypto</h1>
-                    <h1 className='text-blue-500 font-bold lg:text-6xl text-4xl mb-4'>Real Time.</h1>
+                    <h1 className='font-bold 2xl:text-8xl text-6xl mb-4'>Track Crypto</h1>
+                    <h1 className='text-blue-500 font-bold 2xl:text-5xl text-4xl mb-4'>Real Time.</h1>
                 </div>
                 <p className='text-gray-500 lg:text-3xl text-xl mb-4'>Track crypto through a public api in real time. Visit the dashboard to do so!</p>
                 <div className='flex gap-4'>

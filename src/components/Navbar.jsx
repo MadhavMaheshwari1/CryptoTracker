@@ -17,7 +17,7 @@ const Navbar = () => {
     return (
         <header className='flex justify-between max-w-[1920px] mx-auto py-6 items-center  px-8'>
             <Link to="/" className='font-bold lg:text-5xl text-4xl'>CryptoTracker<span className='font-bold text-blue-500 px-1'>.</span></Link>
-            <div className="md:flex hidden text-gray-500 font-semibold lg:text-3xl text-2xl gap-6 px-10 items-center">
+            <div className="xl:flex hidden text-gray-500 font-semibold lg:text-3xl text-2xl gap-6 px-10 items-center">
                 <input type="checkbox" className="checkbox" id="checkbox" />
                 <label htmlFor="checkbox" className="checkbox-label" onClick={toggleTheme}>
                     <span className="ball"></span>
@@ -41,7 +41,7 @@ const Navbar = () => {
             </div>
             <button
                 onClick={toggleDrawer}
-                className="md:hidden p-4 text-2xl text-gray-800"
+                className="xl:hidden p-4 text-2xl text-gray-800"
             >
                 <FaBars />
             </button>
