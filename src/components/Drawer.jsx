@@ -13,7 +13,7 @@ const Drawer = ({ isOpen, onClose }) => {
             onClick={onClose}
         >
             <div
-                className="w-[22rem] z-50 min-h-[100vh] bg-gray-200 h-auto p-4 absolute right-0"
+                className="w-[18rem] z-50 min-h-[100vh] bg-gray-200 h-auto p-4 absolute right-0"
                 onClick={(e) => e.stopPropagation()} // Prevent closing the drawer when clicking inside it
             >
                 <div className="flex flex-col text-gray-500 font-semibold text-2xl gap-6 px-4 justify-center">
