@@ -143,3 +143,9 @@ body {
     transform: translateY(20px);
   }
 }
+
+.cursor--custom {
+  transition-timing-function: ease-out;
+  transition-duration: 200ms;
+  border-radius: 50%;
+}

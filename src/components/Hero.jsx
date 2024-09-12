@@ -1,8 +1,16 @@
 import React from 'react'
+import { useState } from "react"
 import IPhone from "../assets/Iphone.png"
 import { Link } from 'react-router-dom'
 
 const Hero = () => {
+    // const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+    // const handleMouseMovement = (e) => {
+    //     console.log(e);
+    //     setMousePosition({ x: e.pageX, y: e.pageY });
+    // }
+
     return (
         <div className="max-w-[1880px] mx-auto py-6 px-8 2xl:flex-row flex flex-col mt-4">
             <div className="2xl:w-[50%] w-full 2xl:text-start text-center h-[500px] flex flex-col 2xl:items-start items-center justify-center gap-4 ">
