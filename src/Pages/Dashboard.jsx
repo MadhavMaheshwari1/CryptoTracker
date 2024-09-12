@@ -10,6 +10,14 @@ const Dashboard = () => {
   useEffect(() => {
     // Fetch market data for 100 cryptocurrencies from CoinGecko
     const fetchCryptoData = async () => {
+      // Check if data is in local storage
+      const cachedData = localStorage.getItem('cryptoData');
+      if (cachedData) {
+        setCryptoData(JSON.parse(cachedData));
+        setLoading(false);
+        return;
+      }
+
       try {
         const response = await axios.get(
           `https://api.coingecko.com/api/v3/coins/markets`,
@@ -24,14 +32,13 @@ const Dashboard = () => {
           }
         );
         setCryptoData(response.data);
+        localStorage.setItem('cryptoData', JSON.stringify(response.data));
         setLoading(false);
       } catch (err) {
         setError(err.message);
         setLoading(false);
       }
     };
-
-
 
     fetchCryptoData();
   }, []);
@@ -48,9 +55,9 @@ const Dashboard = () => {
     <div className='max-w-[1880px] mx-auto py-6 px-8'>
       <Navbar />
       <h1>Top 100 Cryptocurrencies by Market Cap</h1>
-      <div className="columns-[300px] py-2 px-4 bg-gray-500">
+      <div className="grid grid-cols-5 py-2 px-4 gap-2">
         {cryptoData.map((coin, index) => (
-          <div key={coin.id}>
+          <div key={coin.id} className=' bg-gray-500 py-4 px-6'>
             <h1>{index + 1}</h1>
             <h1>{coin.name}</h1>
             <h1>{coin.symbol.toUpperCase()}</h1>
