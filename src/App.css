@@ -146,6 +146,6 @@ body {
 
 .cursor--custom {
   transition-timing-function: ease-out;
-  transition-duration: 200ms;
+  transition-duration: 300ms;
   border-radius: 50%;
 }
