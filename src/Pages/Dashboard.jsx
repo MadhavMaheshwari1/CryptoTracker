@@ -63,7 +63,7 @@ const Dashboard = () => {
           <button className={`w-1/2 border-b-2 ${gridLayout ? ' border-transparent' : 'border-blue-500'} transition-colors duration-300`} onClick={() => setGridLayout(false)}>List</button>
         </div>
       </div>
-      <div className={`${gridLayout ? 'grid grid-cols-[repeat(auto-fill,minmax(350px,1fr))]' : 'flex flex-col'} py-6 px-8 gap-5`}>
+      <div className={`${gridLayout ? 'grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))]' : 'flex flex-col'} py-6 px-8 gap-5`}>
         {cryptoData.map((coin) => (
           <div key={coin.id} className='bg-[#1B1B1B] py-4 px-6 rounded-xl flex-col h-[300px]'>
             <div className="flex">
