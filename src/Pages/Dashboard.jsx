@@ -91,8 +91,9 @@ const Dashboard = () => {
           const price24hAgo = coin.current_price - coin.price_change_24h;
           const percentageChange = ((coin.price_change_24h / price24hAgo) * 100).toFixed(2);
           const isPositive = percentageChange > 0;
-          const changeText = isPositive ? `+${percentageChange}%` : `${percentageChange}%`;
+          const changeText = isPositive ? `${percentageChange}%` : `${percentageChange}%`;
           const changeColor = isPositive ? 'text-green-500' : 'text-red-500';
+          const changeBorder = isPositive ?'border-green-500' : 'border-red-500';
 
           // Add ref to the array
           const cardRef = (el) => {
@@ -100,14 +101,14 @@ const Dashboard = () => {
           };
 
           // Handle hover effect
-          const handleMouseEnter = () => {
+          const handleMouseCardEnter = () => {
             if (cardRefs.current[index]) {
               cardRefs.current[index].style.borderWidth = '2px';
               cardRefs.current[index].style.borderColor = isPositive ? 'green' : 'red';
             }
           };
 
-          const handleMouseLeave = () => {
+          const handleMouseCardLeave = () => {
             if (cardRefs.current[index]) {
               cardRefs.current[index].style.borderWidth = '2px'; // Ensure the border width remains consistent
               cardRefs.current[index].style.borderColor = 'transparent';
@@ -120,10 +121,10 @@ const Dashboard = () => {
               key={coin.id}
               ref={cardRef}
               className={`${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'} py-5 px-6 rounded-xl flex-col ${gridLayout ? 'h-[300px]' : ''} border-2 border-transparent transition-colors duration-300`}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
+              onMouseEnter={handleMouseCardEnter}
+              onMouseLeave={handleMouseCardLeave}
             >
-              <div className="flex justify-between">
+              <div className="flex justify-between mb-6">
                 <div className="flex w-[150px] gap-4">
                   <div className="flex items-center">
                     <img src={coin.image} className='w-[50px] h-[50px]' alt={coin.name} />
@@ -133,14 +134,14 @@ const Dashboard = () => {
                     <h1 className='text-md text-gray-400'>{coin.name}</h1>
                   </div>
                 </div>
-                <div className='flex items-center'>
-                  <div className={`flex justify-center items-center cursor-pointer w-[40px] h-[40px] rounded-full ${changeColor}`}>
+                <div className={`flex items-center border-2 rounded-full ${changeBorder} w-[40px] h-[40px]`}>
+                  <div className={`flex justify-center items-center cursor-pointer w-[40px] rounded-full ${changeColor} `}>
                     <FaRegStar size={22} />
                   </div>
                 </div>
               </div>
               <div className="flex">
-                <button className={changeColor}>{changeText}</button>
+                <button className={`${changeColor} text-center w-[80px] py-1 border-2 ${changeBorder} rounded-3xl`}>{changeText}</button>
               </div>
             </Link>
           );

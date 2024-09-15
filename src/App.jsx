@@ -10,17 +10,21 @@ import { useContext } from 'react';
 
 function App() {
   const mousePosition = useRef({ x: 0, y: 0 });
-  const { theme, toggleTheme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   const cursorRef = useRef(null); // Reference to the custom cursor element
 
   useEffect(() => {
     const handleMouseMovement = (e) => {
       // Constrain the x position within the viewport
       const constrainedX = Math.min(e.clientX, window.innerWidth - 30);
+      
+      // Calculate the total y position considering the scroll position
+      const totalY = e.clientY + window.scrollY;
 
       mousePosition.current.x = constrainedX;
-      mousePosition.current.y = e.clientY;
+      mousePosition.current.y = totalY;
     };
+
     // Update the cursor position smoothly using requestAnimationFrame
     const updateCursor = () => {
       if (cursorRef.current) {
