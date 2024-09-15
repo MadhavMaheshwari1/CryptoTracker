@@ -46,7 +46,7 @@ function App() {
     <>
       {/* Custom Cursor */}
       <div
-        className="cursor--custom"
+        className="lg:block hidden cursor--custom"
         ref={cursorRef} // Set the ref for the custom cursor
         style={{
           position: 'absolute',

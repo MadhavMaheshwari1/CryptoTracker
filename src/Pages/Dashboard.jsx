@@ -128,7 +128,7 @@ const Dashboard = () => {
               onMouseEnter={handleMouseCardEnter}
               onMouseLeave={handleMouseCardLeave}
             >
-              <div className={`flex justify-between ${gridLayout ? '' : 'items-center mb-0 w-1/4'} mb-6`}>
+              <div className={`flex justify-between ${gridLayout ? '' : 'items-center mb-0 xl:w-1/4 '} mb-6`}>
                 <div className="flex gap-4">
                   <div className="flex items-center">
                     <img src={coin.image} className='md:w-[50px] md:h-[50px] h-[35px] w-[35px]' alt={coin.name} />
@@ -147,22 +147,22 @@ const Dashboard = () => {
                 )
                 }
               </div>
-              <div className={`flex items-center ${gridLayout ? 'gap-4' : 'justify-between md:w-[250px] w-[150px] md:gap-0 gap-2'}`}>
-                <button className={`${changeColor} text-center md:w-[80px] w-[60px] py-1 border-2 ${changeBorder} rounded-3xl md:block hidden`}>{changeText}</button>
-                <div className={`md:flex hidden items-center border-2 rounded-full ${changeBorder} w-[40px] h-[40px]`}>
-                  <div className={`md:flex hidden justify-center items-center cursor-pointer w-[40px] rounded-full ${changeColor} `}>
+              <div className={`flex items-center ${gridLayout ? 'gap-4' : 'md:w-[250px] w-[150px] gap-4'}`}>
+                <button className={`${changeColor} text-center xl:w-[80px] w-[60px] py-1 border-2 ${changeBorder} rounded-3xl xl:block hidden`}>{changeText}</button>
+                <div className={`xl:flex hidden items-center border-2 rounded-full ${changeBorder} w-[40px] h-[40px]`}>
+                  <div className={`xl:flex hidden justify-center items-center cursor-pointer w-[40px] rounded-full ${changeColor} `}>
                     {isPositive && (<FaArrowTrendUp size={22} />)}
                     {!isPositive && (<FaArrowTrendDown size={22} />)}
                   </div>
                 </div>
               </div>
-              {!gridLayout && (<h1 className={`${changeColor} md:text-xl text-md w-[150px]`}>${coin.current_price}</h1>)}
-              <div className={`flex ${gridLayout ? 'flex-col' : 'flex-row mt-0 text-2xl w-1/3 items-center justify-between'} mt-6 gap-3`}>
+              {!gridLayout && (<h1 className={`${changeColor} xl:text-xl text-md w-[150px]`}>${coin.current_price}</h1>)}
+              <div className={`flex ${gridLayout ? 'flex-col' : 'flex-row mt-0 lg:text-xl text-md xl:w-1/3 w-auto items-center justify-between'} mt-6 gap-3`}>
                 {gridLayout && (<h1 className={`${changeColor} md:text-xl text-md`}>${coin.current_price}</h1>)}
                 {gridLayout && (<h1 className="md:text-lg text-sm text-gray-600">Total Volume: ${coin.total_volume}</h1>)}
                 {gridLayout && (<h1 className="md:text-lg text-sm text-gray-600">Market Cap: ${coin.market_cap}</h1>)}
-                {!gridLayout && (<h1 className="md:text-xl text-md text-gray-600">${coin.total_volume}</h1>)}
-                {!gridLayout && (<h1 className="md:text-xl text-md text-gray-600">${coin.market_cap}</h1>)}
+                {!gridLayout && (<h1 className="xl:text-xl text-md text-gray-600">${coin.total_volume}</h1>)}
+                {!gridLayout && (<h1 className="xl:text-xl text-md text-gray-600">${coin.market_cap}</h1>)}
                 {!gridLayout && (
                   <div className={`flex items-center border-2 rounded-full ${changeBorder} w-[40px] h-[40px]`}>
                     <div className={`flex justify-center items-center cursor-pointer w-[40px] rounded-full ${changeColor} `}>
