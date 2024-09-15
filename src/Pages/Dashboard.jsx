@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { FaRegStar } from "react-icons/fa6";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { FaArrowTrendDown } from "react-icons/fa6";
+import Footer from '../components/Footer';
 
 const Dashboard = () => {
   const [cryptoData, setCryptoData] = useState([]);
@@ -123,44 +124,59 @@ const Dashboard = () => {
               to="/"
               key={coin.id}
               ref={cardRef}
-              className={`${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'} py-5 px-6 rounded-xl flex-col ${gridLayout ? 'h-[300px]' : ''} border-2 border-transparent transition-colors duration-300`}
+              className={`${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'} py-5 px-6 rounded-xl flex ${gridLayout ? 'h-[300px] flex-col' : 'flex-row xl:justify-between gap-12 items-center'} border-2 border-transparent transition-colors duration-300`}
               onMouseEnter={handleMouseCardEnter}
               onMouseLeave={handleMouseCardLeave}
             >
-              <div className="flex justify-between mb-6">
-                <div className="flex w-[150px] gap-4">
+              <div className={`flex justify-between ${gridLayout ? '' : 'items-center mb-0 w-1/4'} mb-6`}>
+                <div className="flex gap-4">
                   <div className="flex items-center">
-                    <img src={coin.image} className='w-[50px] h-[50px]' alt={coin.name} />
+                    <img src={coin.image} className='md:w-[50px] md:h-[50px] h-[35px] w-[35px]' alt={coin.name} />
                   </div>
-                  <div className="flex-col">
-                    <h1 className='text-xl font-semibold'>{coin.symbol.toUpperCase()}</h1>
-                    <h1 className='text-md text-gray-400'>{coin.name}</h1>
-                  </div>
-                </div>
-                <div className={`flex items-center border-2 rounded-full ${changeBorder} w-[40px] h-[40px]`}>
-                  <div className={`flex justify-center items-center cursor-pointer w-[40px] rounded-full ${changeColor} `}>
-                    <FaRegStar size={22} />
+                  <div className="flex flex-col">
+                    <h1 className='md:text-xl text-md font-semibold'>{coin.symbol.toUpperCase()}</h1>
+                    <h1 className='text-md text-gray-600'>{coin.name}</h1>
                   </div>
                 </div>
+                {gridLayout && (
+                  <div className={`flex items-center border-2 rounded-full ${changeBorder} w-[40px] h-[40px]`}>
+                    <div className={`flex justify-center items-center cursor-pointer w-[40px] rounded-full ${changeColor} `}>
+                      <FaRegStar size={22} />
+                    </div>
+                  </div>
+                )
+                }
               </div>
-              <div className="flex gap-4">
-                <button className={`${changeColor} text-center w-[80px] py-1 border-2 ${changeBorder} rounded-3xl`}>{changeText}</button>
-                <div className={`flex items-center border-2 rounded-full ${changeBorder} w-[40px] h-[40px]`}>
-                  <div className={`flex justify-center items-center cursor-pointer w-[40px] rounded-full ${changeColor} `}>
+              <div className={`flex items-center ${gridLayout ? 'gap-4' : 'justify-between md:w-[250px] w-[150px] md:gap-0 gap-2'}`}>
+                <button className={`${changeColor} text-center md:w-[80px] w-[60px] py-1 border-2 ${changeBorder} rounded-3xl md:block hidden`}>{changeText}</button>
+                <div className={`md:flex hidden items-center border-2 rounded-full ${changeBorder} w-[40px] h-[40px]`}>
+                  <div className={`md:flex hidden justify-center items-center cursor-pointer w-[40px] rounded-full ${changeColor} `}>
                     {isPositive && (<FaArrowTrendUp size={22} />)}
                     {!isPositive && (<FaArrowTrendDown size={22} />)}
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col mt-6 gap-3">
-                <h1 className={`${changeColor} text-xl`}>${coin.current_price}</h1>
-                <h1 className="text-lg text-gray-400">Total Volume: {coin.total_volume}</h1>
-                <h1 className="text-lg text-gray-400">Market Cap: ${coin.market_cap}</h1>
+              {!gridLayout && (<h1 className={`${changeColor} md:text-xl text-md w-[150px]`}>${coin.current_price}</h1>)}
+              <div className={`flex ${gridLayout ? 'flex-col' : 'flex-row mt-0 text-2xl w-1/3 items-center justify-between'} mt-6 gap-3`}>
+                {gridLayout && (<h1 className={`${changeColor} md:text-xl text-md`}>${coin.current_price}</h1>)}
+                {gridLayout && (<h1 className="md:text-lg text-sm text-gray-600">Total Volume: ${coin.total_volume}</h1>)}
+                {gridLayout && (<h1 className="md:text-lg text-sm text-gray-600">Market Cap: ${coin.market_cap}</h1>)}
+                {!gridLayout && (<h1 className="md:text-xl text-md text-gray-600">${coin.total_volume}</h1>)}
+                {!gridLayout && (<h1 className="md:text-xl text-md text-gray-600">${coin.market_cap}</h1>)}
+                {!gridLayout && (
+                  <div className={`flex items-center border-2 rounded-full ${changeBorder} w-[40px] h-[40px]`}>
+                    <div className={`flex justify-center items-center cursor-pointer w-[40px] rounded-full ${changeColor} `}>
+                      <FaRegStar size={22} />
+                    </div>
+                  </div>
+                )
+                }
               </div>
             </Link>
           );
         })}
       </div>
+      <Footer />
     </div>
   );
 };
