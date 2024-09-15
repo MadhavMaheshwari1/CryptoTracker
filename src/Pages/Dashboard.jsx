@@ -6,6 +6,7 @@ const Dashboard = () => {
   const [cryptoData, setCryptoData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [gridLayout, setGridLayout] = useState(true);
 
   useEffect(() => {
     // Fetch market data for 100 cryptocurrencies from CoinGecko
@@ -13,6 +14,7 @@ const Dashboard = () => {
       // Check if data is in local storage
       const cachedData = localStorage.getItem('cryptoData');
       if (cachedData) {
+        console.log(JSON.parse(cachedData));
         setCryptoData(JSON.parse(cachedData));
         setLoading(false);
         return;
@@ -54,11 +56,19 @@ const Dashboard = () => {
   return (
     <div className='max-w-[1880px] mx-auto py-6 px-8'>
       <Navbar />
-      <h1>Top 100 Cryptocurrencies by Market Cap</h1>
-      <div className="grid grid-cols-5 py-2 px-4 gap-2">
+      <div className="flex-col">
+        <div className="py-6 px-8 w-full"><input type="search" name="search" id="search" className='w-full md:py-3 py-2 md:px-6 px-4 bg-[#111111] rounded-full' placeholder='Search' /></div>
+        <div className="flex w-full px-8">
+          <button className={`w-1/2  border-b-2 ${gridLayout ? 'border-blue-500' : 'border-transparent '} transition-colors duration-300`} onClick={() => setGridLayout(true)}>Grid</button>
+          <button className={`w-1/2 border-b-2 ${gridLayout ? ' border-transparent' : 'border-blue-500'} transition-colors duration-300`} onClick={() => setGridLayout(false)}>List</button>
+        </div>
+      </div>
+      <div className={`${gridLayout ? 'grid grid-cols-5' : 'flex flex-col'} py-6 px-8 gap-5`}>
         {cryptoData.map((coin, index) => (
-          <div key={coin.id} className=' bg-gray-500 py-4 px-6'>
-            <h1>{index + 1}</h1>
+          <div key={coin.id} className=' bg-[#1B1B1B] py-4 px-6 rounded-xl flex-col'>
+            <div className="flex">
+              {/* <img src={coin.image}>{index + 1}</img> */}
+            </div>
             <h1>{coin.name}</h1>
             <h1>{coin.symbol.toUpperCase()}</h1>
             <h1>${coin.current_price.toLocaleString()}</h1>

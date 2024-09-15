@@ -15,12 +15,12 @@ const Navbar = () => {
     };
 
     return (
-        <header className='flex justify-between max-w-[1880px] mx-auto py-10 items-center  px-8'>
+        <header className='flex justify-between max-w-[1880px] mx-auto py-10 items-center ps-8'>
             <Link to="/" className='font-bold lg:text-5xl text-4xl'>CryptoTracker<span className='font-bold text-blue-500 px-1'>.</span></Link>
             <div className="xl:flex hidden text-gray-500 font-semibold lg:text-3xl text-2xl gap-6 px-10 items-center">
                 <input type="checkbox" className="checkbox" id="checkbox" />
-                <label htmlFor="checkbox" className="checkbox-label" onClick={toggleTheme}>
-                    <span className="ball"></span>
+                <label htmlFor="checkbox" className={`checkbox-label ${theme === 'dark' ? 'bg-blue-500' : ''}`} onClick={toggleTheme}>
+                    <span className={`ball ${theme === 'dark' ? 'bg-blue-800' : ''}`}></span>
                 </label>
                 <Link to="/" className={`transition-colors duration-300`} onMouseEnter={(e) => {
                     e.target.style.color = theme === 'dark' ? 'white' : 'black'
