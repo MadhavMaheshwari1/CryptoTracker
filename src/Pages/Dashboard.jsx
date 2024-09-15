@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import { ThemeContext } from '../context/ThemeContext';
@@ -9,9 +9,12 @@ import { FaRegStar } from "react-icons/fa6";
 const Dashboard = () => {
   const [cryptoData, setCryptoData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { theme, toggleTheme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   const [error, setError] = useState(null);
   const [gridLayout, setGridLayout] = useState(true);
+
+  // Create an array of refs for each card
+  const cardRefs = useRef([]);
 
   useEffect(() => {
     const fetchCryptoData = async () => {
@@ -84,19 +87,41 @@ const Dashboard = () => {
         </div>
       </div>
       <div className={`${gridLayout ? 'grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))]' : 'flex flex-col'} py-6 px-8 gap-5`}>
-        {cryptoData.map((coin) => {
+        {cryptoData.map((coin, index) => {
           const price24hAgo = coin.current_price - coin.price_change_24h;
           const percentageChange = ((coin.price_change_24h / price24hAgo) * 100).toFixed(2);
           const isPositive = percentageChange > 0;
           const changeText = isPositive ? `+${percentageChange}%` : `${percentageChange}%`;
           const changeColor = isPositive ? 'text-green-500' : 'text-red-500';
-          const borderColor = isPositive ? 'border-green-400' : 'border-red-400';
+
+          // Add ref to the array
+          const cardRef = (el) => {
+            cardRefs.current[index] = el;
+          };
+
+          // Handle hover effect
+          const handleMouseEnter = () => {
+            if (cardRefs.current[index]) {
+              cardRefs.current[index].style.borderWidth = '2px';
+              cardRefs.current[index].style.borderColor = isPositive ? 'green' : 'red';
+            }
+          };
+
+          const handleMouseLeave = () => {
+            if (cardRefs.current[index]) {
+              cardRefs.current[index].style.borderWidth = '2px'; // Ensure the border width remains consistent
+              cardRefs.current[index].style.borderColor = 'transparent';
+            }
+          };
 
           return (
             <Link
               to="/"
               key={coin.id}
-              className={`${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'} py-5 px-6 rounded-xl flex-col ${gridLayout ? 'h-[300px]' : ''} border-2 ${borderColor} transition-colors duration-300`}
+              ref={cardRef}
+              className={`${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'} py-5 px-6 rounded-xl flex-col ${gridLayout ? 'h-[300px]' : ''} border-2 border-transparent transition-colors duration-300`}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
             >
               <div className="flex justify-between">
                 <div className="flex w-[150px] gap-4">
@@ -109,7 +134,7 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <div className='flex items-center'>
-                  <div className={`flex justify-center items-center cursor-pointer w-[40px] h-[40px] rounded-full ${changeColor} border-2 ${isPositive ? 'border-2 border-green-500' : 'border-2 border-red-500'}`}>
+                  <div className={`flex justify-center items-center cursor-pointer w-[40px] h-[40px] rounded-full ${changeColor}`}>
                     <FaRegStar size={22} />
                   </div>
                 </div>
