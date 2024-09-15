@@ -63,11 +63,11 @@ const Dashboard = () => {
           <button className={`w-1/2 border-b-2 ${gridLayout ? ' border-transparent' : 'border-blue-500'} transition-colors duration-300`} onClick={() => setGridLayout(false)}>List</button>
         </div>
       </div>
-      <div className={`${gridLayout ? 'grid grid-cols-5' : 'flex flex-col'} py-6 px-8 gap-5`}>
-        {cryptoData.map((coin, index) => (
-          <div key={coin.id} className=' bg-[#1B1B1B] py-4 px-6 rounded-xl flex-col'>
+      <div className={`${gridLayout ? 'grid lg:grid-cols-[repeat(auto-fill,minmax(350px,1fr))] grid-cols-2' : 'flex flex-col'} py-6 px-8 gap-5`}>
+        {cryptoData.map((coin) => (
+          <div key={coin.id} className='bg-[#1B1B1B] py-4 px-6 rounded-xl flex-col h-[300px]'>
             <div className="flex">
-              {/* <img src={coin.image}>{index + 1}</img> */}
+              <img src={coin.image} className='w-[50px]' alt={coin.name} />
             </div>
             <h1>{coin.name}</h1>
             <h1>{coin.symbol.toUpperCase()}</h1>
@@ -76,6 +76,7 @@ const Dashboard = () => {
           </div>
         ))}
       </div>
+
     </div>
   );
 };
