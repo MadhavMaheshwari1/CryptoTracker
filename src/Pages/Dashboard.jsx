@@ -126,7 +126,7 @@ const Dashboard = () => {
           </button>
         </div>
       </div>
-      {filteredCryptoData.length === 0 && (<div className='flex flex-col w-full h-[500px] justify-center items-center'>
+      {filteredCryptoData.length === 0 && (<div className='flex flex-col w-full h-[300px] justify-center items-center'>
         <button className='flex justify-center items-center py-5 px-8 bg-blue-500 mb-4 rounded-xl'>No Item Found</button>
         <button className='flex justify-center items-center py-3 px-6 bg-blue-500 rounded-xl' onClick={() => setInpValue('')}>Clear Search</button>
       </div>)}
