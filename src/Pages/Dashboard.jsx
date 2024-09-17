@@ -11,11 +11,12 @@ import Footer from '../components/Footer';
 
 const Dashboard = () => {
   const [cryptoData, setCryptoData] = useState([]);
+  const [filteredCryptoData, setFilteredCryptoData] = useState([]);
   const [loading, setLoading] = useState(true);
   const { theme } = useContext(ThemeContext);
   const [error, setError] = useState(null);
   const [gridLayout, setGridLayout] = useState(true);
-
+  const [inpValue, setInpValue] = useState("Bitcoin");
   const cardRefs = useRef([]);
 
   useEffect(() => {
@@ -27,6 +28,7 @@ const Dashboard = () => {
       // Check if cached data is not older than 30 minutes (30 minutes = 1800000 ms)
       if (cachedData && cachedTimestamp && (currentTime - parseInt(cachedTimestamp, 10)) < 1800000) {
         setCryptoData(JSON.parse(cachedData));
+        setFilteredCryptoData(JSON.parse(cachedData));
         setLoading(false);
         return;
       }
@@ -45,6 +47,7 @@ const Dashboard = () => {
           }
         );
         setCryptoData(response.data);
+        setFilteredCryptoData(response.data);
         localStorage.setItem('cryptoData', JSON.stringify(response.data));
         localStorage.setItem('cryptoDataTimestamp', currentTime.toString()); // Save the timestamp
         setLoading(false);
@@ -56,6 +59,34 @@ const Dashboard = () => {
 
     fetchCryptoData();
   }, []);
+
+  const inputSearchHandler = (e) => {
+    const val = e.target.value;
+    setInpValue(val);
+    console.log(val);
+    if (val === '') {
+      setFilteredCryptoData(cryptoData);
+      return;
+    }
+    setFilteredCryptoData(cryptoData.filter(cdata => cdata.name.toLowerCase().startsWith(val.toLowerCase())));
+
+  }
+  useEffect(() => {
+
+    const inputSearchHandler = (inpValue) => {
+      const val = inpValue;
+      setInpValue(val);
+      console.log(val);
+      if (val === '') {
+        setFilteredCryptoData(cryptoData);
+        return;
+      }
+      setFilteredCryptoData(cryptoData.filter(cdata => cdata.name.toLowerCase().startsWith(val.toLowerCase())));
+
+    }
+
+    inputSearchHandler(inpValue);
+  }, [inpValue]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -73,6 +104,8 @@ const Dashboard = () => {
           <input
             type="search"
             name="search"
+            value={inpValue}
+            onChange={(e) => inputSearchHandler(e)}
             id="search"
             className={`w-full md:py-3 py-2 md:px-6 px-4 ${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'} rounded-full`}
             placeholder='Search'
@@ -93,8 +126,12 @@ const Dashboard = () => {
           </button>
         </div>
       </div>
+      {filteredCryptoData.length === 0 && (<div className='flex flex-col w-full h-[500px] justify-center items-center'>
+        <button className='flex justify-center items-center py-5 px-8 bg-blue-500 mb-4 rounded-xl'>No Item Found</button>
+        <button className='flex justify-center items-center py-3 px-6 bg-blue-500 rounded-xl' onClick={() => setInpValue('')}>Clear Search</button>
+      </div>)}
       <div className={`${gridLayout ? 'grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))]' : 'flex flex-col'} py-6 px-8 gap-5`}>
-        {cryptoData.map((coin, index) => {
+        {filteredCryptoData.map((coin, index) => {
           const price24hAgo = coin.current_price - coin.price_change_24h;
           const percentageChange = ((coin.price_change_24h / price24hAgo) * 100).toFixed(2);
           const isPositive = percentageChange > 0;
@@ -119,8 +156,6 @@ const Dashboard = () => {
               cardRefs.current[index].style.borderColor = 'transparent';
             }
           };
-
-
 
           return (
             <Link
