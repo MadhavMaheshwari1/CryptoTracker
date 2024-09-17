@@ -217,14 +217,15 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
       {
         <div className="flex w-full items-center justify-center gap-4">
           <button disabled={start === 1} onClick={() => setStart(start - 1)} className={`${start === 1 ? 'disabled' : ''}`}><FaCircleArrowLeft size={40} /></button>
+          {start !== 1 && <div className="dots">...</div>}
           {
             [...Array((Math.ceil(cryptoData.length / noOfCoinsPerPage)))].map((_, index) => (
-              <button key={index} className={`flex w-[40px] items-center justify-center h-[40px] border-2 ${theme==='dark'?'border-white':'border-black'} rounded-full ${start === (index + 1) ? 'bg-blue-500' : ''}`} onClick={() => setStart(index + 1)}>{index + 1}</button>
+              <button key={index} className={`flex md:w-[40px] items-center justify-center md:h-[40px] w-[25px] h-[25px] border-2 ${theme === 'dark' ? 'border-white' : 'border-black'} rounded-full ${start === (index + 1) ? 'bg-blue-500' : ''} ${(start >= (index + 1) && (start + Math.min(5, (Math.ceil(cryptoData.length / noOfCoinsPerPage)))<=(index+1))) ? 'block' : 'hidden'}`} onClick={() => setStart(index + 1)}>{index + 1}</button>
             ))
           }
+          {start !== (Math.ceil(cryptoData.length / noOfCoinsPerPage)) && <div className="dots">...</div>}
           <button disabled={start === (Math.ceil(cryptoData.length / noOfCoinsPerPage))} onClick={() => setStart(start + 1)} className={`${start === (Math.ceil(cryptoData.length / noOfCoinsPerPage)) ? 'disabled' : ''}`}>< FaCircleArrowRight size={40} /></button>
         </div>
-
       }
       <Footer />
     </>
