@@ -17,7 +17,7 @@ function App() {
     const handleMouseMovement = (e) => {
       // Constrain the x position within the viewport
       const constrainedX = Math.min(e.clientX, window.innerWidth - 30);
-      
+
       // Calculate the total y position considering the scroll position
       const totalY = e.clientY + window.scrollY;
 
@@ -44,7 +44,6 @@ function App() {
 
   return (
     <>
-      {/* Custom Cursor */}
       <div
         className="lg:block hidden cursor--custom"
         ref={cursorRef} // Set the ref for the custom cursor
@@ -66,7 +65,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/Compare" element={<ComparePage />} />
           <Route path="/WishList" element={<WishListPage />} />
-          <Route path="/Dashboard" element={<Dashboard />} />
+          <Route path="/Dashboard" element={<Dashboard noOfCoinsPerPage={5} />} />
         </Routes>
       </BrowserRouter>
     </>

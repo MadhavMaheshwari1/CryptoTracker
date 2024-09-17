@@ -7,13 +7,16 @@ import { Link } from 'react-router-dom';
 import { FaRegStar } from "react-icons/fa6";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { FaArrowTrendDown } from "react-icons/fa6";
+import { FaCircleArrowLeft } from "react-icons/fa6";
+import { FaCircleArrowRight } from "react-icons/fa6";
 import Footer from '../components/Footer';
 
-const Dashboard = () => {
+const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
   const [cryptoData, setCryptoData] = useState([]);
   const [filteredCryptoData, setFilteredCryptoData] = useState([]);
   const [loading, setLoading] = useState(true);
   const { theme } = useContext(ThemeContext);
+  const [start, setStart] = useState(1);
   const [error, setError] = useState(null);
   const [gridLayout, setGridLayout] = useState(true);
   const [inpValue, setInpValue] = useState("");
@@ -31,8 +34,6 @@ const Dashboard = () => {
       return Math.floor(value);
     }
   }
-
-
 
   useEffect(() => {
     const fetchCryptoData = async () => {
@@ -130,9 +131,8 @@ const Dashboard = () => {
           <button className='flex justify-center items-center py-3 px-6 bg-blue-500 rounded-xl' onClick={() => inputSearchHandler("")}>Clear Search</button>
         </div>)}
         <div className={`${gridLayout ? 'grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))]' : 'flex flex-col'} py-6 px-8 gap-5`}>
-          {filteredCryptoData.map((coin, index) => {
-            const price24hAgo = coin.current_price - coin.price_change_24h;
-            const percentageChange = ((coin.price_change_24h / price24hAgo) * 100).toFixed(2);
+          {filteredCryptoData.slice(start * noOfCoinsPerPage - noOfCoinsPerPage, start * noOfCoinsPerPage).map((coin, index) => {
+            const percentageChange = coin.price_change_percentage_24h.toFixed(2);
             const isPositive = percentageChange > 0;
             const changeText = isPositive ? `${percentageChange}%` : `${percentageChange}%`;
             const changeColor = isPositive ? 'text-green-500' : 'text-red-500';
@@ -195,9 +195,9 @@ const Dashboard = () => {
                 </div>
                 {!gridLayout && (<h1 className={`${changeColor} lg:text-lg text-sm`}>${formatNumber(coin.current_price)}</h1>)}
                 <div className={`flex ${gridLayout ? 'flex-col mt-4 ' : 'flex-row lg:text-xl text-md w-auto items-center justify-end'} gap-3`}>
-                  {gridLayout && (<h1 className={`${changeColor} md:text-lg text-sm`}>${formatNumber(coin.current_price)}</h1>)}
-                  {gridLayout && (<h1 className={`md:text-lg text-sm ${theme === 'dark' ? 'text-white' : 'text-black'}`}>Total Volume: ${formatNumber(coin.total_volume)}</h1>)}
-                  {gridLayout && (<h1 className={`md:text-lg text-sm ${theme === 'dark' ? 'text-white' : 'text-black'}`}>Market Cap: ${formatNumber(coin.market_cap)}</h1>)}
+                  {gridLayout && (<h1 className={`${changeColor} md:text-lg text-sm`}>${coin.current_price.toLocaleString()}</h1>)}
+                  {gridLayout && (<h1 className={`md:text-lg text-sm ${theme === 'dark' ? 'text-white' : 'text-black'}`}>Total Volume: ${coin.total_volume.toLocaleString()}</h1>)}
+                  {gridLayout && (<h1 className={`md:text-lg text-sm ${theme === 'dark' ? 'text-white' : 'text-black'}`}>Market Cap: ${coin.market_cap.toLocaleString()}</h1>)}
                   {!gridLayout && (<h1 className={`md:text-lg text-sm ${theme === 'dark' ? 'text-white' : 'text-black'} md:block hidden`}>${formatNumber(coin.total_volume)}</h1>)}
                   {!gridLayout && (<h1 className={`md:text-lg text-sm ${theme === 'dark' ? 'text-white' : 'text-black'}`}>${formatNumber(coin.market_cap)}</h1>)}
                   {!gridLayout && (
@@ -214,9 +214,21 @@ const Dashboard = () => {
           })}
         </div>
       </div>
+      {
+        <div className="flex w-full items-center justify-center gap-4">
+          <button disabled={start === 1} onClick={() => setStart(start - 1)} className={`${start === 1 ? 'disabled' : ''}`}><FaCircleArrowLeft size={40} /></button>
+          {
+            [...Array((Math.ceil(cryptoData.length / noOfCoinsPerPage)))].map((_, index) => (
+              <button key={index} className={`flex w-[40px] items-center justify-center h-[40px] border-2 ${theme==='dark'?'border-white':'border-black'} rounded-full ${start === (index + 1) ? 'bg-blue-500' : ''}`} onClick={() => setStart(index + 1)}>{index + 1}</button>
+            ))
+          }
+          <button disabled={start === (Math.ceil(cryptoData.length / noOfCoinsPerPage))} onClick={() => setStart(start + 1)} className={`${start === (Math.ceil(cryptoData.length / noOfCoinsPerPage)) ? 'disabled' : ''}`}>< FaCircleArrowRight size={40} /></button>
+        </div>
+
+      }
       <Footer />
     </>
   );
 };
 
-export default Dashboard;
+export default PaginatedDashboard;

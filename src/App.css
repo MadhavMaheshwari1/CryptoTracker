@@ -149,3 +149,8 @@ body {
   transition-duration: 500ms;
   border-radius: 50%;
 }
+
+/* Button Disabling */
+.disabled {
+  opacity:0.5;
+}
