@@ -65,7 +65,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/Compare" element={<ComparePage />} />
           <Route path="/WishList" element={<WishListPage />} />
-          <Route path="/Dashboard" element={<Dashboard noOfCoinsPerPage={5} />} />
+          <Route path="/Dashboard" element={<Dashboard noOfCoinsPerPage={10} />} />
         </Routes>
       </BrowserRouter>
     </>
