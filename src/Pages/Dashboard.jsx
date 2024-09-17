@@ -16,7 +16,7 @@ const Dashboard = () => {
   const { theme } = useContext(ThemeContext);
   const [error, setError] = useState(null);
   const [gridLayout, setGridLayout] = useState(true);
-  const [inpValue, setInpValue] = useState("Bitcoin");
+  const [inpValue, setInpValue] = useState("");
   const cardRefs = useRef([]);
 
   useEffect(() => {
@@ -60,8 +60,10 @@ const Dashboard = () => {
     fetchCryptoData();
   }, []);
 
-  const inputSearchHandler = (e) => {
-    const val = e.target.value;
+  // useEffect(() => {
+
+  const inputSearchHandler = (inpValue) => {
+    const val = inpValue;
     setInpValue(val);
     console.log(val);
     if (val === '') {
@@ -71,22 +73,9 @@ const Dashboard = () => {
     setFilteredCryptoData(cryptoData.filter(cdata => cdata.name.toLowerCase().startsWith(val.toLowerCase())));
 
   }
-  useEffect(() => {
 
-    const inputSearchHandler = (inpValue) => {
-      const val = inpValue;
-      setInpValue(val);
-      console.log(val);
-      if (val === '') {
-        setFilteredCryptoData(cryptoData);
-        return;
-      }
-      setFilteredCryptoData(cryptoData.filter(cdata => cdata.name.toLowerCase().startsWith(val.toLowerCase())));
-
-    }
-
-    inputSearchHandler(inpValue);
-  }, [inpValue]);
+  //   inputSearchHandler(inpValue);
+  // }, [inpValue]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -105,7 +94,7 @@ const Dashboard = () => {
             type="search"
             name="search"
             value={inpValue}
-            onChange={(e) => inputSearchHandler(e)}
+            onChange={(e) => inputSearchHandler(e.target.value)}
             id="search"
             className={`w-full md:py-3 py-2 md:px-6 px-4 ${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'} rounded-full`}
             placeholder='Search'
@@ -128,7 +117,7 @@ const Dashboard = () => {
       </div>
       {filteredCryptoData.length === 0 && (<div className='flex flex-col w-full h-[300px] justify-center items-center'>
         <button className='flex justify-center items-center py-5 px-8 bg-blue-500 mb-4 rounded-xl'>No Item Found</button>
-        <button className='flex justify-center items-center py-3 px-6 bg-blue-500 rounded-xl' onClick={() => setInpValue('')}>Clear Search</button>
+        <button className='flex justify-center items-center py-3 px-6 bg-blue-500 rounded-xl' onClick={() => inputSearchHandler("")}>Clear Search</button>
       </div>)}
       <div className={`${gridLayout ? 'grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))]' : 'flex flex-col'} py-6 px-8 gap-5`}>
         {filteredCryptoData.map((coin, index) => {
