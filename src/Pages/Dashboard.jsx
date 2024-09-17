@@ -16,14 +16,16 @@ const Dashboard = () => {
   const [error, setError] = useState(null);
   const [gridLayout, setGridLayout] = useState(true);
 
-  // Create an array of refs for each card
   const cardRefs = useRef([]);
 
   useEffect(() => {
     const fetchCryptoData = async () => {
       const cachedData = localStorage.getItem('cryptoData');
-      if (cachedData) {
-        console.log(JSON.parse(cachedData));
+      const cachedTimestamp = localStorage.getItem('cryptoDataTimestamp');
+      const currentTime = new Date().getTime();
+
+      // Check if cached data is not older than 30 minutes (30 minutes = 1800000 ms)
+      if (cachedData && cachedTimestamp && (currentTime - parseInt(cachedTimestamp, 10)) < 1800000) {
         setCryptoData(JSON.parse(cachedData));
         setLoading(false);
         return;
@@ -44,6 +46,7 @@ const Dashboard = () => {
         );
         setCryptoData(response.data);
         localStorage.setItem('cryptoData', JSON.stringify(response.data));
+        localStorage.setItem('cryptoDataTimestamp', currentTime.toString()); // Save the timestamp
         setLoading(false);
       } catch (err) {
         setError(err.message);
