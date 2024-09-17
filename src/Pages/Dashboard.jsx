@@ -220,7 +220,7 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
           {start !== 1 && <div className="dots">...</div>}
           {
             [...Array((Math.ceil(cryptoData.length / noOfCoinsPerPage)))].map((_, index) => (
-              <button key={index} className={`flex md:w-[40px] items-center justify-center md:h-[40px] w-[25px] h-[25px] border-2 ${theme === 'dark' ? 'border-white' : 'border-black'} rounded-full ${start === (index + 1) ? 'bg-blue-500' : ''} ${(start >= (index + 1) && (start + Math.min(5, (Math.ceil(cryptoData.length / noOfCoinsPerPage)))<=(index+1))) ? 'block' : 'hidden'}`} onClick={() => setStart(index + 1)}>{index + 1}</button>
+              <button key={index} className={`flex md:w-[40px] items-center justify-center md:h-[40px] w-[25px] h-[25px] border-2 ${theme === 'dark' ? 'border-white' : 'border-black'} rounded-full ${start === (index + 1) ? 'bg-blue-500' : ''}`} onClick={() => setStart(index + 1)}>{index + 1}</button>
             ))
           }
           {start !== (Math.ceil(cryptoData.length / noOfCoinsPerPage)) && <div className="dots">...</div>}
