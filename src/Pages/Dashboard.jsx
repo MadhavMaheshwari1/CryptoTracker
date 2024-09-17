@@ -19,6 +19,19 @@ const Dashboard = () => {
   const [inpValue, setInpValue] = useState("");
   const cardRefs = useRef([]);
 
+  function formatNumber(value) {
+    if (value >= 1_000_000_000) {
+      return (value / 1_000_000_000).toFixed(1) + 'b';
+    } else if (value >= 1_000_000) {
+      return (value / 1_000_000).toFixed(1) + 'm';
+    } else if (value >= 1_000) {
+      return (value / 1_000).toFixed(1) + 'k';
+    } else {
+      return value.toString();
+    }
+  }
+
+
   useEffect(() => {
     const fetchCryptoData = async () => {
       const cachedData = localStorage.getItem('cryptoData');
@@ -81,7 +94,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className='max-w-[1880px] min-h-[85vh] mx-auto py-6 px-8'>
+      <div className='max-w-[1880px] min-h-[85vh] mx-auto py-6'>
         <Navbar />
         <div className="flex-col">
           <div className="py-6 px-8 w-full">
@@ -114,7 +127,7 @@ const Dashboard = () => {
           <button className='flex justify-center items-center py-5 px-8 bg-blue-500 mb-4 rounded-xl'>No Item Found</button>
           <button className='flex justify-center items-center py-3 px-6 bg-blue-500 rounded-xl' onClick={() => inputSearchHandler("")}>Clear Search</button>
         </div>)}
-        <div className={`${gridLayout ? 'grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))]' : 'flex flex-col'} py-6 px-8 gap-5`}>
+        <div className={`${gridLayout ? 'grid grid-cols-4' : 'flex flex-col'} py-6 px-8 gap-5`}>
           {filteredCryptoData.map((coin, index) => {
             const price24hAgo = coin.current_price - coin.price_change_24h;
             const percentageChange = ((coin.price_change_24h / price24hAgo) * 100).toFixed(2);
@@ -146,18 +159,18 @@ const Dashboard = () => {
                 to="/"
                 key={coin.id}
                 ref={cardRef}
-                className={`${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'} py-5 px-6 rounded-xl flex ${gridLayout ? 'h-[300px] flex-col' : 'flex-row xl:justify-between gap-12 items-center'} border-2 border-transparent transition-colors duration-300`}
+                className={`${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'} md:py-5 md:px-6 px-2 py-3 rounded-xl flex ${gridLayout ? 'h-[300px] flex-col' : 'grid  grid-cols-[30%,20%,10%,40%] justify-between items-center'} border-2 border-transparent transition-colors duration-300`}
                 onMouseEnter={handleMouseCardEnter}
                 onMouseLeave={handleMouseCardLeave}
               >
-                <div className={`flex justify-between ${gridLayout ? '' : 'items-center mb-0 xl:w-1/4 '} mb-6`}>
+                <div className={`flex justify-between ${gridLayout ? 'mb-6' : 'items-center'}`}>
                   <div className="flex gap-4">
                     <div className="flex items-center">
-                      <img src={coin.image} className='md:w-[50px] md:h-[50px] h-[35px] w-[35px]' alt={coin.name} />
+                      <img src={coin.image} className='h-[30px] w-[30px] md:h-[60px] md:w-[60px]' alt={coin.name} />
                     </div>
                     <div className="flex flex-col">
-                      <h1 className='md:text-xl text-md font-semibold'>{coin.symbol.toUpperCase()}</h1>
-                      <h1 className='text-md text-gray-600'>{coin.name}</h1>
+                      <h1 className='lg:text-xl text-sm font-semibold'>{coin.symbol.toUpperCase()}</h1>
+                      <h1 className='lg:text-md text-sm text-gray-600'>{coin.name}</h1>
                     </div>
                   </div>
                   {gridLayout && (
@@ -169,26 +182,26 @@ const Dashboard = () => {
                   )
                   }
                 </div>
-                <div className={`flex items-center ${gridLayout ? 'gap-4' : 'md:w-[250px] w-[150px] gap-4'}`}>
-                  <button className={`${changeColor} text-center xl:w-[80px] w-[60px] py-1 border-2 ${changeBorder} rounded-3xl xl:block hidden`}>{changeText}</button>
+                <div className="flex items-center lg:gap-4 gap-2">
+                  <button className={`${changeColor} text-center xl:w-[80px] lg:text-md text-sm w-[60px] py-1 border-2 ${changeBorder} rounded-3xl`}>{changeText}</button>
                   <div className={`xl:flex hidden items-center border-2 rounded-full ${changeBorder} w-[40px] h-[40px]`}>
-                    <div className={`xl:flex hidden justify-center items-center cursor-pointer w-[40px] rounded-full ${changeColor} `}>
+                    <div className={`lg:flex hidden justify-center items-center cursor-pointer w-[40px] rounded-full ${changeColor} `}>
                       {isPositive && (<FaArrowTrendUp size={22} />)}
                       {!isPositive && (<FaArrowTrendDown size={22} />)}
                     </div>
                   </div>
                 </div>
-                {!gridLayout && (<h1 className={`${changeColor} xl:text-xl text-md w-[150px]`}>${coin.current_price}</h1>)}
-                <div className={`flex ${gridLayout ? 'flex-col' : 'flex-row mt-0 lg:text-xl text-md xl:w-1/3 w-auto items-center justify-between'} mt-6 gap-3`}>
-                  {gridLayout && (<h1 className={`${changeColor} md:text-xl text-md`}>${coin.current_price}</h1>)}
-                  {gridLayout && (<h1 className="md:text-lg text-sm text-gray-600">Total Volume: ${coin.total_volume}</h1>)}
-                  {gridLayout && (<h1 className="md:text-lg text-sm text-gray-600">Market Cap: ${coin.market_cap}</h1>)}
-                  {!gridLayout && (<h1 className="xl:text-xl text-md text-gray-600">${coin.total_volume}</h1>)}
-                  {!gridLayout && (<h1 className="xl:text-xl text-md text-gray-600">${coin.market_cap}</h1>)}
+                {!gridLayout && (<h1 className={`${changeColor} lg:text-lg text-sm`}>${formatNumber(coin.current_price)}</h1>)}
+                <div className={`flex ${gridLayout ? 'flex-col mt-4 ' : 'flex-row lg:text-xl text-md w-auto items-center justify-end'} gap-3`}>
+                  {gridLayout && (<h1 className={`${changeColor} md:text-xl text-md`}>${formatNumber(coin.current_price)}</h1>)}
+                  {gridLayout && (<h1 className="md:text-lg text-sm text-gray-600">Total Volume: ${formatNumber(coin.total_volume)}</h1>)}
+                  {gridLayout && (<h1 className="md:text-lg text-sm text-gray-600">Market Cap: ${formatNumber(coin.market_cap)}</h1>)}
+                  {!gridLayout && (<h1 className="xl:text-xl text-md text-gray-600 md:block hidden">${formatNumber(coin.total_volume)}</h1>)}
+                  {!gridLayout && (<h1 className="xl:text-xl text-md text-gray-600">${formatNumber(coin.market_cap)}</h1>)}
                   {!gridLayout && (
-                    <div className={`flex items-center border-2 rounded-full ${changeBorder} w-[40px] h-[40px]`}>
-                      <div className={`flex justify-center items-center cursor-pointer w-[40px] rounded-full ${changeColor} `}>
-                        <FaRegStar size={22} />
+                    <div className={`flex items-center border-2 rounded-full ${changeBorder} lg:w-[40px] lg:h-[40px] h-[25px] w-[25px]`}>
+                      <div className={`flex justify-center items-center cursor-pointer w-[25px] lg:w-[40px] rounded-full ${changeColor} `}>
+                        <FaRegStar />
                       </div>
                     </div>
                   )

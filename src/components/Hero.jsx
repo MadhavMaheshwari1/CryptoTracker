@@ -2,17 +2,13 @@ import React from 'react'
 import { useState } from "react"
 import IPhone from "../assets/Iphone.png"
 import { Link } from 'react-router-dom'
+import Footer from './Footer'
 
 const Hero = () => {
-    // const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-    // const handleMouseMovement = (e) => {
-    //     console.log(e);
-    //     setMousePosition({ x: e.pageX, y: e.pageY });
-    // }
 
     return (
-        <div className="max-w-[1880px] mx-auto py-6 px-8 2xl:flex-row flex flex-col mt-4">
+        <>
+        <div className="max-w-[1880px] min-h-[85vh] mx-auto py-6 px-8 2xl:flex-row flex flex-col mt-4">
             <div className="2xl:w-[50%] w-full 2xl:text-start text-center h-[500px] flex flex-col 2xl:items-start items-center justify-center gap-4 ">
                 <div>
                     <h1 className='font-bold 2xl:text-8xl text-5xl mb-4'>Track Crypto</h1>
@@ -34,6 +30,8 @@ const Hero = () => {
                 {/* </div> */}
             </div>
         </div>
+        <Footer/>
+        </>
     )
 }
 
