@@ -20,16 +20,18 @@ const Dashboard = () => {
   const cardRefs = useRef([]);
 
   function formatNumber(value) {
-    if (value >= 1_000_000_000) {
-      return (value / 1_000_000_000).toFixed(1) + 'b';
-    } else if (value >= 1_000_000) {
-      return (value / 1_000_000).toFixed(1) + 'm';
-    } else if (value >= 1_000) {
-      return (value / 1_000).toFixed(1) + 'k';
+
+    if (value >= 1000000000) {
+      return Math.floor(value / 1000000000) + 'b';
+    } else if (value >= 1000000) {
+      return Math.floor(value / 1000000) + 'm';
+    } else if (value >= 1000) {
+      return Math.floor(value / 1000) + 'k';
     } else {
-      return value.toString();
+      return Math.floor(value);
     }
   }
+
 
 
   useEffect(() => {
@@ -159,7 +161,7 @@ const Dashboard = () => {
                 to="/"
                 key={coin.id}
                 ref={cardRef}
-                className={`${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'} md:py-5 md:px-6 px-2 py-3 rounded-xl flex ${gridLayout ? 'h-[300px] flex-col' : 'grid  sm:grid-cols-[30%,20%,10%,40%] grid-cols-[40%,0%,20%,40%] justify-between items-center'} border-2 border-transparent transition-colors duration-300`}
+                className={`${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'} md:py-5 md:px-6 px-2 py-3 rounded-xl flex ${gridLayout ? 'h-[300px] flex-col' : 'grid  sm:grid-cols-[30%,20%,10%,40%] grid-cols-[55%,0%,15%,30%] justify-between items-center'} border-2 border-transparent transition-colors duration-300`}
                 onMouseEnter={handleMouseCardEnter}
                 onMouseLeave={handleMouseCardLeave}
               >
@@ -194,10 +196,10 @@ const Dashboard = () => {
                 {!gridLayout && (<h1 className={`${changeColor} lg:text-lg text-sm`}>${formatNumber(coin.current_price)}</h1>)}
                 <div className={`flex ${gridLayout ? 'flex-col mt-4 ' : 'flex-row lg:text-xl text-md w-auto items-center justify-end'} gap-3`}>
                   {gridLayout && (<h1 className={`${changeColor} md:text-lg text-sm`}>${formatNumber(coin.current_price)}</h1>)}
-                  {gridLayout && (<h1 className={`md:text-lg text-sm ${theme==='dark'?'text-white':'text-black'}`}>Total Volume: ${formatNumber(coin.total_volume)}</h1>)}
-                  {gridLayout && (<h1 className={`md:text-lg text-sm ${theme==='dark'?'text-white':'text-black'}`}>Market Cap: ${formatNumber(coin.market_cap)}</h1>)}
-                  {!gridLayout && (<h1 className={`md:text-lg text-sm ${theme==='dark'?'text-white':'text-black'} md:block hidden`}>${formatNumber(coin.total_volume)}</h1>)}
-                  {!gridLayout && (<h1 className={`md:text-lg text-sm ${theme==='dark'?'text-white':'text-black'}`}>${formatNumber(coin.market_cap)}</h1>)}
+                  {gridLayout && (<h1 className={`md:text-lg text-sm ${theme === 'dark' ? 'text-white' : 'text-black'}`}>Total Volume: ${formatNumber(coin.total_volume)}</h1>)}
+                  {gridLayout && (<h1 className={`md:text-lg text-sm ${theme === 'dark' ? 'text-white' : 'text-black'}`}>Market Cap: ${formatNumber(coin.market_cap)}</h1>)}
+                  {!gridLayout && (<h1 className={`md:text-lg text-sm ${theme === 'dark' ? 'text-white' : 'text-black'} md:block hidden`}>${formatNumber(coin.total_volume)}</h1>)}
+                  {!gridLayout && (<h1 className={`md:text-lg text-sm ${theme === 'dark' ? 'text-white' : 'text-black'}`}>${formatNumber(coin.market_cap)}</h1>)}
                   {!gridLayout && (
                     <div className={`flex items-center border-2 rounded-full ${changeBorder} lg:w-[40px] lg:h-[40px] h-[25px] w-[25px]`}>
                       <div className={`flex justify-center items-center cursor-pointer w-[25px] lg:w-[40px] rounded-full ${changeColor} `}>
