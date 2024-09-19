@@ -10,7 +10,6 @@ import { FaArrowTrendUp } from "react-icons/fa6";
 import { FaArrowTrendDown } from "react-icons/fa6";
 import { FaCircleArrowLeft } from "react-icons/fa6";
 import { FaCircleArrowRight } from "react-icons/fa6";
-import Footer from '../components/Footer';
 
 const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
   const [cryptoData, setCryptoData] = useState([]);
@@ -103,7 +102,6 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
   return (
     <>
       <div className='max-w-[1880px] min-h-[85vh] mx-auto py-6'>
-        <Navbar />
         <div className="flex-col">
           <div className="py-6 px-8 w-full">
             <input
@@ -163,10 +161,11 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
 
             return (
               <Link
-                to="/"
+                to={`/Dashboard/${coin.name}`}
+                state={{ coinData: coin }} // Pass specific coin data here
                 key={coin.id}
                 ref={cardRef}
-                className={`${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'} md:py-5 md:px-6 px-2 py-3 rounded-xl flex ${gridLayout ? 'h-[300px] flex-col' : 'grid  sm:grid-cols-[30%,20%,10%,40%] grid-cols-[55%,0%,15%,30%] justify-between items-center'} border-2 border-transparent transition-colors duration-300`}
+                className={`${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'} md:py-5 md:px-6 px-2 py-2 rounded-xl flex ${gridLayout ? 'h-[300px] flex-col py-4 px-4' : 'grid  sm:grid-cols-[30%,20%,10%,40%] grid-cols-[55%,0%,15%,30%] justify-between items-center'} border-2 border-transparent transition-colors duration-300`}
                 onMouseEnter={handleMouseCardEnter}
                 onMouseLeave={handleMouseCardLeave}
               >
@@ -182,8 +181,15 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
                   </div>
                   {gridLayout && (
                     <div className={`flex items-center border-2 rounded-full ${changeBorder} w-[40px] h-[40px]`}>
-                      <div className={`flex justify-center items-center cursor-pointer w-[40px] rounded-full ${changeColor} `}>
-                        <FaRegStar size={22} />
+                      <div className={`flex justify-center items-center cursor-pointer w-[40px] rounded-full`}>
+                        <div className="group relative">
+                          <FaRegStar className={`${changeColor}`} size={22} />
+                          <span
+                            className={`text-sm ${theme === 'dark' ? 'bg-gray-400' : 'bg-gray-200'} rounded-md px-2 pointer-events-none absolute -top-10 -left-10 w-max opacity-0 transition-opacity group-hover:opacity-100 `}>
+                            Add to Watchlist
+                          </span>
+                        </div>
+
                       </div>
                     </div>
                   )
@@ -198,17 +204,33 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
                     </div>
                   </div>
                 </div>
-                {!gridLayout && (<h1 className={`${changeColor} lg:text-lg text-sm`}>${formatNumber(coin.current_price)}</h1>)}
+                {!gridLayout && (
+                  <div className="group relative">
+                    <h1 className={`${changeColor} lg:text-lg ${gridLayout ? 'text-lg' : 'text-sm'}`}>${formatNumber(coin.current_price)}</h1>
+                    <span
+                      className={`text-sm ${theme === 'dark' ? 'bg-gray-400' : 'bg-gray-200'} rounded-md px-2 pointer-events-none absolute -top-7 -left-5 w-max opacity-0 transition-opacity group-hover:opacity-100 `}>
+                      Current Price
+                    </span>
+                  </div>
+                )}
                 <div className={`flex ${gridLayout ? 'flex-col mt-4 ' : 'flex-row lg:text-xl text-md w-auto items-center justify-end'} gap-3`}>
-                  {gridLayout && (<h1 className={`${changeColor} md:text-lg text-sm`}>${coin.current_price.toLocaleString()}</h1>)}
-                  {gridLayout && (<h1 className={`md:text-lg text-sm ${theme === 'dark' ? 'text-white' : 'text-black'}`}>Total Volume: ${coin.total_volume.toLocaleString()}</h1>)}
-                  {gridLayout && (<h1 className={`md:text-lg text-sm ${theme === 'dark' ? 'text-white' : 'text-black'}`}>Market Cap: ${coin.market_cap.toLocaleString()}</h1>)}
-                  {!gridLayout && (<h1 className={`md:text-lg text-sm ${theme === 'dark' ? 'text-white' : 'text-black'} md:block hidden`}>${formatNumber(coin.total_volume)}</h1>)}
-                  {!gridLayout && (<h1 className={`md:text-lg text-sm ${theme === 'dark' ? 'text-white' : 'text-black'}`}>${formatNumber(coin.market_cap)}</h1>)}
+                  {gridLayout && (
+                    <div className="group relative mt-4">
+                      <h1 className={`${changeColor} lg:text-lg ${gridLayout ? 'text-lg' : 'text-sm'}`}>${formatNumber(coin.current_price)}</h1>
+                      <span
+                        className={`text-sm ${theme === 'dark' ? 'bg-gray-400' : 'bg-gray-200'} rounded-md px-2 pointer-events-none absolute -top-7 -left-5 w-max opacity-0 transition-opacity group-hover:opacity-100 `}>
+                        Current Price
+                      </span>
+                    </div>
+                  )}
+                  {gridLayout && (<h1 className={`lg:text-lg ${gridLayout ? 'text-lg' : 'text-sm'} ${theme === 'dark' ? 'text-white' : 'text-black'}`}>Total Volume: ${coin.total_volume.toLocaleString()}</h1>)}
+                  {gridLayout && (<h1 className={`lg:text-lg ${gridLayout ? 'text-lg' : 'text-sm'}  ${theme === 'dark' ? 'text-white' : 'text-black'}`}>Market Cap: ${coin.market_cap.toLocaleString()}</h1>)}
+                  {!gridLayout && (<h1 className={`lg:text-lg ${gridLayout ? 'text-lg' : 'text-sm'} ${theme === 'dark' ? 'text-white' : 'text-black'} md:block hidden`}>${formatNumber(coin.total_volume)}</h1>)}
+                  {!gridLayout && (<h1 className={`lg:text-lg ${gridLayout ? 'text-lg' : 'text-sm'} first-line:${theme === 'dark' ? 'text-white' : 'text-black'}`}>${formatNumber(coin.market_cap)}</h1>)}
                   {!gridLayout && (
                     <div className={`flex items-center border-2 rounded-full ${changeBorder} lg:w-[40px] lg:h-[40px] h-[25px] w-[25px]`}>
                       <div className={`flex justify-center items-center cursor-pointer w-[25px] lg:w-[40px] rounded-full ${changeColor} `}>
-                        <FaRegStar />
+                        <FaRegStar className={`${changeColor}`} size={22} />
                       </div>
                     </div>
                   )
@@ -221,7 +243,7 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
       </div>
       {
         <div className="flex w-full items-center justify-center gap-4">
-          <button disabled={start === 1} onClick={() => setStart(start - 1)} className={`${start === 1 ? 'disabled' : ''}`}><FaCircleArrowLeft size={40} /></button>
+          <button disabled={start === 1} onClick={() => setStart(start - 1)} className={`${start === 1 ? 'disabled' : ''} md:text-4xl text-2xl`}><FaCircleArrowLeft /></button>
           {start !== 1 && <div className="dots">...</div>}
           {
             [...Array((Math.ceil(cryptoData.length / noOfCoinsPerPage)))].map((_, index) => (
@@ -229,10 +251,9 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
             ))
           }
           {start !== (Math.ceil(cryptoData.length / noOfCoinsPerPage)) && <div className="dots">...</div>}
-          <button disabled={start >= Math.max(Math.ceil(cryptoData.length / noOfCoinsPerPage) - 4, 1)} onClick={() => setStart(start + 1)} className={`${start >= Math.max(Math.ceil(cryptoData.length / noOfCoinsPerPage) - 4, 1) ? 'disabled' : ''}`}>< FaCircleArrowRight size={40} /></button>
+          <button disabled={start >= Math.max(Math.ceil(cryptoData.length / noOfCoinsPerPage) - 4, 1)} onClick={() => setStart(start + 1)} className={`${start >= Math.max(Math.ceil(cryptoData.length / noOfCoinsPerPage) - 4, 1) ? 'disabled' : ''} md:text-4xl text-2xl`}>< FaCircleArrowRight /></button>
         </div>
       }
-      <Footer />
     </>
   );
 };

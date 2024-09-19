@@ -6,7 +6,10 @@ import ComparePage from './Pages/ComparePage';
 import WishListPage from './Pages/WishListPage';
 import { useEffect, useRef } from 'react';
 import { ThemeContext } from './context/ThemeContext';
+import CoinDescriptionPage from './Pages/CoinDescriptionPage';
 import { useContext } from 'react';
+import Footer from './components/Footer';
+import Navbar from './components/Navbar';
 
 function App() {
   const mousePosition = useRef({ x: 0, y: 0 });
@@ -61,12 +64,15 @@ function App() {
 
       {/* Main App Content */}
       <BrowserRouter>
+      <Navbar />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/Compare" element={<ComparePage />} />
           <Route path="/WishList" element={<WishListPage />} />
           <Route path="/Dashboard" element={<Dashboard noOfCoinsPerPage={10} />} />
+          <Route path="/Dashboard/:CoinName" element={<CoinDescriptionPage />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
     </>
   );
