@@ -48,6 +48,7 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
       // Check if cached data is not older than 30 minutes (30 minutes = 1800000 ms)
       if (cachedData && cachedTimestamp && (currentTime - parseInt(cachedTimestamp, 10)) < 1800000) {
         setCryptoData(JSON.parse(cachedData));
+        console.log(JSON.parse(cachedData));
         setFilteredCryptoData(JSON.parse(cachedData));
         setLoading(false);
         return;
@@ -66,6 +67,7 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
             },
           }
         );
+        console.log(cryptoData);
         setCryptoData(response.data);
         setFilteredCryptoData(response.data);
         localStorage.setItem('cryptoData', JSON.stringify(response.data));
