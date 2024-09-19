@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import { ThemeContext } from '../context/ThemeContext';
+import { FaSpinner } from "react-icons/fa6";
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { FaRegStar } from "react-icons/fa6";
@@ -88,7 +89,7 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className='w-[90vw] h-[100vh] flex justify-center items-center animate-spin'><FaSpinner /></div>;
   }
 
   if (error) {
