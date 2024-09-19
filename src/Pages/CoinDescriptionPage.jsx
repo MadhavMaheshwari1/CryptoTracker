@@ -132,6 +132,7 @@ const CoinDescriptionPage = () => {
             <option value={7}>7 Days</option>
             <option value={30}>30 Days</option>
             <option value={60}>60 Days</option>
+            <option value={90}>90 Days</option>
             <option value={120}>120 Days</option>
           </select>
         </div>
