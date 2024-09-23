@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import Navbar from '../components/Navbar';
 import { ThemeContext } from '../context/ThemeContext';
 import { FaSpinner } from "react-icons/fa6";
 import { useContext } from 'react';
@@ -14,10 +13,11 @@ import { FaCircleArrowRight } from "react-icons/fa6";
 const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
   const [cryptoData, setCryptoData] = useState([]);
   const [filteredCryptoData, setFilteredCryptoData] = useState([]);
+  const [timer, setTimer] = useState(0);
   const [loading, setLoading] = useState(true);
   const { theme } = useContext(ThemeContext);
   const [start, setStart] = useState(1);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState({ error: false, errorMessage: null });
   const [gridLayout, setGridLayout] = useState(true);
   const [inpValue, setInpValue] = useState("");
   const cardRefs = useRef([]);
@@ -39,48 +39,80 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
     setStart(index + 1);
   }
 
+  // const timerHandler = () => {
+  //   setTimer(timer => (timer>timer - 1));
+  // }
+
+  const fetchCryptoData = async () => {
+    const cachedData = localStorage.getItem('cryptoData');
+    const cachedTimestamp = localStorage.getItem('cryptoDataTimestamp');
+    const currentTime = new Date().getTime();
+
+    // Check if cached data is not older than 30 minutes (30 minutes = 1800000 ms)
+    if (cachedData && cachedTimestamp && (currentTime - parseInt(cachedTimestamp, 10)) < 180000) {
+      setCryptoData(JSON.parse(cachedData));
+      console.log(JSON.parse(cachedData));
+      setFilteredCryptoData(JSON.parse(cachedData));
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await axios.get(
+        `https://api.coingecko.com/api/v3/coins/marets`,
+        {
+          params: {
+            vs_currency: 'usd',
+            order: 'market_cap_desc',
+            per_page: 100,
+            page: 1,
+            sparkline: false,
+          },
+        }
+      );
+      setError(() => {
+        return ({ error: false })
+      });
+      console.log(cryptoData);
+      setCryptoData(response.data);
+      setFilteredCryptoData(response.data);
+      localStorage.setItem('cryptoData', JSON.stringify(response.data));
+      localStorage.setItem('cryptoDataTimestamp', currentTime.toString()); // Save the timestamp
+      setLoading(false);
+    } catch (err) {
+      setTimer(5);
+      setError(() => {
+        return ({ error: true, errorMessage: err.message })
+      });
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchCryptoData = async () => {
-      const cachedData = localStorage.getItem('cryptoData');
-      const cachedTimestamp = localStorage.getItem('cryptoDataTimestamp');
-      const currentTime = new Date().getTime();
-
-      // Check if cached data is not older than 30 minutes (30 minutes = 1800000 ms)
-      if (cachedData && cachedTimestamp && (currentTime - parseInt(cachedTimestamp, 10)) < 1800000) {
-        setCryptoData(JSON.parse(cachedData));
-        console.log(JSON.parse(cachedData));
-        setFilteredCryptoData(JSON.parse(cachedData));
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const response = await axios.get(
-          `https://api.coingecko.com/api/v3/coins/markets`,
-          {
-            params: {
-              vs_currency: 'usd',
-              order: 'market_cap_desc',
-              per_page: 100,
-              page: 1,
-              sparkline: false,
-            },
-          }
-        );
-        console.log(cryptoData);
-        setCryptoData(response.data);
-        setFilteredCryptoData(response.data);
-        localStorage.setItem('cryptoData', JSON.stringify(response.data));
-        localStorage.setItem('cryptoDataTimestamp', currentTime.toString()); // Save the timestamp
-        setLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
-      }
-    };
-
     fetchCryptoData();
   }, []);
+
+  const retryHandler = () => {
+    fetchCryptoData();
+    setLoading(true);
+  }
+
+  useEffect(() => {
+    if (error.error) {
+      const interval = setInterval(() => {
+        setTimer((prevTimer) => {
+          if (prevTimer >= 1) {
+            return prevTimer - 1; // Decrease timer
+          } else {
+            clearInterval(interval);
+            setTimer(0); // Reset timer to 0
+            return 0; // Ensure timer stays at 0
+          }
+        });
+      }, 1000);
+      return () => clearInterval(interval); // Clean up interval on component unmount
+    }
+  }, [error]);
 
   const inputSearchHandler = (inpValue) => {
     const val = inpValue;
@@ -94,12 +126,30 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
   }
 
   if (loading) {
-    return <div className='w-[90vw] h-[100vh] flex justify-center items-center animate-spin'><FaSpinner size={102} /></div>;
+    return <div className='w-[90vw] h-[100vh] flex justify-center items-center animate-spin'><FaSpinner size={52} /></div>;
   }
 
-  if (error) {
-    return <div>Error: {error}</div>;
+  if (error.error) {
+    return (
+      <div className="grid h-screen place-content-center px-4">
+        <div className="text-center">
+          <p className="text-3xl font-bold tracking-tight text-gray-600 sm:text-7xl">Uh-oh!</p>
+          <p className="mt-4 text-xl text-gray-500">{error.errorMessage}</p>
+          <p className="mt-4 text-gray-500 text-xl">Retry after: {timer} seconds</p>
+          <div className="flex flex-col gap-4 text-xl">
+            <Link
+              to="/"
+              className="mt-6 inline-block rounded bg-indigo-600 px-5 py-3 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring"
+            >
+              Go Back Home
+            </Link>
+            {timer === 0 && (<button className="bg-blue-500 py-2 px-4 rounded-md hover:bg-blue-600" onClick={() => retryHandler()}>Retry</button>)}</div>
+
+        </div>
+      </div>
+    );
   }
+
 
   return (
     <>
@@ -186,7 +236,7 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
                     <div className={`flex items-center border-2 rounded-full ${changeBorder} lg:w-[40px] lg:h-[40px] h-[25px] w-[25px] group relative`}>
                       <div className={`absolute w-full h-full top-0 left-0 ${changeBackground} opacity-0 group-hover:opacity-100 transition-all rounded-full`}></div>
                       <div className={`flex justify-center items-center cursor-pointer w-[25px] lg:w-[40px] rounded-full`}>
-                        <FaRegStar className={`${changeColor} group-hover:text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all lg:text-md text-[12px]`}/>
+                        <FaRegStar className={`${changeColor} group-hover:text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all lg:text-md text-[12px]`} />
                       </div>
                     </div>
                   )
@@ -234,7 +284,7 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
                     <div className={`flex items-center border-2 rounded-full ${changeBorder} lg:w-[40px] lg:h-[40px] h-[20px] w-[20px] group relative`}>
                       <div className={`absolute w-full h-full top-0 left-0 ${changeBackground} opacity-0 group-hover:opacity-100 transition-all rounded-full`}></div>
                       <div className={`flex justify-center items-center cursor-pointer lg:w-[40px] rounded-full`}>
-                        <FaRegStar className={`${changeColor} group-hover:text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all lg:text-md text-[12px]`}/>
+                        <FaRegStar className={`${changeColor} group-hover:text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all lg:text-md text-[12px]`} />
                       </div>
                     </div>
                   )

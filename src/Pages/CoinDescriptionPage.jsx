@@ -3,9 +3,11 @@ import { useLocation } from 'react-router-dom';
 import { ThemeContext } from '../context/ThemeContext';
 import { FaArrowTrendUp, FaArrowTrendDown, FaRegStar } from 'react-icons/fa6';
 import PriceChart from '../components/PriceChart'; // Import the area chart component
+import { FaSpinner } from "react-icons/fa6";
 
 const CoinDescriptionPage = () => {
   const location = useLocation();
+  const [loading, setLoading] = useState(true);
   const { theme } = useContext(ThemeContext);
   const { coinData } = location.state || {}; // Extract the coin data
 
@@ -29,6 +31,7 @@ const CoinDescriptionPage = () => {
         setVolumeData(volumes);
         setMarketCapData(marketCaps);
         setLabels(dates);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching historical data:', error);
       }
@@ -59,6 +62,10 @@ const CoinDescriptionPage = () => {
     } else {
       return Math.floor(value);
     }
+  }
+
+  if (loading) {
+    return <div className='w-[95vw] h-[100vh] flex justify-center items-center animate-spin'><FaSpinner size={102} /></div>;
   }
 
   return (
