@@ -3,7 +3,7 @@ import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import HomePage from './Pages/HomePage';
 import Dashboard from './Pages/Dashboard';
 import ComparePage from './Pages/ComparePage';
-import WishListPage from './Pages/WishListPage';
+import WatchListPage from './Pages/WatchListPage';
 import { useEffect, useRef } from 'react';
 import { ThemeContext } from './context/ThemeContext';
 import CoinDescriptionPage from './Pages/CoinDescriptionPage';
@@ -68,7 +68,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/Compare" element={<ComparePage />} />
-          <Route path="/WishList" element={<WishListPage />} />
+          <Route path="/WatchList" element={<WatchListPage />} />
           <Route path="/Dashboard" element={<Dashboard noOfCoinsPerPage={10} />} />
           <Route path="/Dashboard/:CoinName" element={<CoinDescriptionPage />} />
         </Routes>

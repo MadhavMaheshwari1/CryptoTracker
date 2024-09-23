@@ -32,11 +32,11 @@ const Navbar = () => {
                 }} onMouseLeave={(e) => {
                     e.target.style.color = theme === 'dark' ? 'gray' : 'gray'
                 }}>Compare</Link>
-                <Link to="/WishList" className={`transition-colors duration-300`} onMouseEnter={(e) => {
+                <Link to="/WatchList" className={`transition-colors duration-300`} onMouseEnter={(e) => {
                     e.target.style.color = theme === 'dark' ? 'white' : 'black'
                 }} onMouseLeave={(e) => {
                     e.target.style.color = theme === 'dark' ? 'gray' : 'gray'
-                }}>WishList</Link>
+                }}>Watchlist</Link>
                 <Link to="/Dashboard" className={`duration-300 py-2 px-4 bg-blue-500 text-white rounded-full transition-all hover:shadow-[0_0_10px_10px_rgba(59,130,246,0.5)]`}>Dashboard</Link>
             </div>
             <button

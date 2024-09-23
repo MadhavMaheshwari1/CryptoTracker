@@ -4,10 +4,12 @@ import { ThemeContext } from '../context/ThemeContext';
 import { FaArrowTrendUp, FaArrowTrendDown, FaRegStar } from 'react-icons/fa6';
 import PriceChart from '../components/PriceChart'; // Import the area chart component
 import { FaSpinner } from "react-icons/fa6";
+import { WatchListContext } from '../context/WatchListContext';
 
 const CoinDescriptionPage = () => {
   const location = useLocation();
   const [loading, setLoading] = useState(true);
+  const { addItemToWatchList } = useContext(WatchListContext);
   const { theme } = useContext(ThemeContext);
   const { coinData } = location.state || {}; // Extract the coin data
 
@@ -65,7 +67,7 @@ const CoinDescriptionPage = () => {
   }
 
   if (loading) {
-    return <div className='w-[95vw] h-[100vh] flex justify-center items-center animate-spin'><FaSpinner size={102} /></div>;
+    return <div className='w-[90vw] h-[100vh] flex justify-center items-center animate-spin'><FaSpinner size={102} /></div>;
   }
 
   return (
@@ -117,11 +119,11 @@ const CoinDescriptionPage = () => {
               Market Cap
             </span>
           </div>
-          <div className="group relative">
+          <div className="group relative cursor-pointer" onClick={() => addItemToWatchList(coinData)}>
             <div className={`flex items-center border-2 rounded-full ${changeBorder} lg:w-[40px] lg:h-[40px] w-[20px] h-[20px] relative`}>
               <div className={`absolute w-full h-full top-0 left-0 ${changeBackground} opacity-0 group-hover:opacity-100 transition-all rounded-full`}></div>
               <div className={`flex justify-center items-center cursor-pointer w-[25px] lg:w-[40px] rounded-full`}>
-                <FaRegStar className={`${changeColor} group-hover:text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all lg:text-md text-[12px]`}/>
+                <FaRegStar className={`${changeColor} group-hover:text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all lg:text-md text-[12px] md:text-[18px]`} />
               </div>
             </div>
           </div>

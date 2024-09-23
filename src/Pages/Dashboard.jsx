@@ -59,7 +59,7 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
 
     try {
       const response = await axios.get(
-        `https://api.coingecko.com/api/v3/coins/marets`,
+        `https://api.coingecko.com/api/v3/coins/markets`,
         {
           params: {
             vs_currency: 'usd',
@@ -80,7 +80,7 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
       localStorage.setItem('cryptoDataTimestamp', currentTime.toString()); // Save the timestamp
       setLoading(false);
     } catch (err) {
-      setTimer(5);
+      setTimer(10);
       setError(() => {
         return ({ error: true, errorMessage: err.message })
       });
@@ -126,7 +126,7 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
   }
 
   if (loading) {
-    return <div className='w-[90vw] h-[100vh] flex justify-center items-center animate-spin'><FaSpinner size={52} /></div>;
+    return <div className='w-[90vw] h-[100vh] flex justify-center items-center animate-spin'><FaSpinner size={102} /></div>;
   }
 
   if (error.error) {
@@ -143,7 +143,7 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
             >
               Go Back Home
             </Link>
-            {timer === 0 && (<button className="bg-blue-500 py-2 px-4 rounded-md hover:bg-blue-600" onClick={() => retryHandler()}>Retry</button>)}</div>
+            {timer === 0 && (<button className="bg-indigo-600 py-2 px-4 rounded-md hover:bg-indigo-700" onClick={() => retryHandler()}>Retry</button>)}</div>
 
         </div>
       </div>
@@ -233,10 +233,10 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
                     </div>
                   </div>
                   {gridLayout && (
-                    <div className={`flex items-center border-2 rounded-full ${changeBorder} lg:w-[40px] lg:h-[40px] h-[25px] w-[25px] group relative`}>
+                    <div className={`cursor pointer flex items-center border-2 rounded-full ${changeBorder} lg:w-[40px] lg:h-[40px] h-[25px] w-[25px] group relative`}>
                       <div className={`absolute w-full h-full top-0 left-0 ${changeBackground} opacity-0 group-hover:opacity-100 transition-all rounded-full`}></div>
-                      <div className={`flex justify-center items-center cursor-pointer w-[25px] lg:w-[40px] rounded-full`}>
-                        <FaRegStar className={`${changeColor} group-hover:text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all lg:text-md text-[12px]`} />
+                      <div className={`flex justify-center items-center w-[25px] lg:w-[40px] rounded-full`}>
+                        <FaRegStar className={`${changeColor} group-hover:text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all lg:text-md md:text-[18px] text-[12px]`} />
                       </div>
                     </div>
                   )
@@ -281,10 +281,10 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
                   {!gridLayout && (<h1 className={`lg:text-lg ${gridLayout ? 'text-lg' : 'text-sm'} ${theme === 'dark' ? 'text-white' : 'text-black'} md:block hidden`}>${formatNumber(coin.total_volume)}</h1>)}
                   {!gridLayout && (<h1 className={`lg:text-lg ${gridLayout ? 'text-lg' : 'text-sm'} first-line:${theme === 'dark' ? 'text-white' : 'text-black'}`}>${formatNumber(coin.market_cap)}</h1>)}
                   {!gridLayout && (
-                    <div className={`flex items-center border-2 rounded-full ${changeBorder} lg:w-[40px] lg:h-[40px] h-[20px] w-[20px] group relative`}>
+                    <div className={`cursor-pointer flex items-center border-2 rounded-full ${changeBorder} lg:w-[40px] lg:h-[40px] h-[20px] w-[20px] group relative`}>
                       <div className={`absolute w-full h-full top-0 left-0 ${changeBackground} opacity-0 group-hover:opacity-100 transition-all rounded-full`}></div>
-                      <div className={`flex justify-center items-center cursor-pointer lg:w-[40px] rounded-full`}>
-                        <FaRegStar className={`${changeColor} group-hover:text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all lg:text-md text-[12px]`} />
+                      <div className={`flex justify-center items-center lg:w-[40px] rounded-full`}>
+                        <FaRegStar className={`${changeColor} md:text-[18px] text-[12px] group-hover:text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all lg:text-md`} />
                       </div>
                     </div>
                   )
