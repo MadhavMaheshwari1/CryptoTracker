@@ -9,8 +9,9 @@ import { WatchListContext } from '../context/WatchListContext';
 const CoinDescriptionPage = () => {
   const location = useLocation();
   const [loading, setLoading] = useState(true);
-  const { addItemToWatchList } = useContext(WatchListContext);
+  const { watchList, addItemToWatchList, removeItemFromWatchList } = useContext(WatchListContext);
   const { theme } = useContext(ThemeContext);
+  const [itemAdded, setItemAdded] = useState(false);
   const { coinData } = location.state || {}; // Extract the coin data
 
   const [priceData, setPriceData] = useState([]);
@@ -66,6 +67,20 @@ const CoinDescriptionPage = () => {
     }
   }
 
+  useEffect(() => {
+    const isItemInWatchList = watchList.some(item => item.name === coinData.name);
+    setItemAdded(isItemInWatchList);
+  }, [coinData, watchList]);
+
+  const watchListHandler = (coinData) => {
+    if (itemAdded) {
+      removeItemFromWatchList(coinData);
+    } else {
+      addItemToWatchList(coinData);
+    }
+    setItemAdded(!itemAdded); // Toggle the state
+  };
+
   if (loading) {
     return <div className='w-[90vw] h-[100vh] flex justify-center items-center animate-spin'><FaSpinner size={102} /></div>;
   }
@@ -119,7 +134,7 @@ const CoinDescriptionPage = () => {
               Market Cap
             </span>
           </div>
-          <div className="group relative cursor-pointer" onClick={() => addItemToWatchList(coinData)}>
+          <div className="group relative cursor-pointer" onClick={() => watchListHandler(coinData)}>
             <div className={`flex items-center border-2 rounded-full ${changeBorder} lg:w-[40px] lg:h-[40px] w-[20px] h-[20px] relative`}>
               <div className={`absolute w-full h-full top-0 left-0 ${changeBackground} opacity-0 group-hover:opacity-100 transition-all rounded-full`}></div>
               <div className={`flex justify-center items-center cursor-pointer w-[25px] lg:w-[40px] rounded-full`}>

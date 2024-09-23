@@ -17,8 +17,21 @@ const WatchListProvider = ({ children }) => {
         });
     };
 
+    const removeItemFromWatchList = (coinData) => {
+        const indexToRemove = watchList.findIndex(item => item.name === coinData.name);
+
+        if (indexToRemove !== -1) {
+            const updatedArray = [
+                ...watchList.slice(0, indexToRemove),
+                ...watchList.slice(indexToRemove + 1),
+            ];
+            localStorage.setItem('watchList', JSON.stringify(updatedArray)); // Save to localStorage
+            setWatchList(updatedArray);
+        };
+    }
+
     return (
-        <WatchListContext.Provider value={{ watchList, addItemToWatchList }}>
+        <WatchListContext.Provider value={{ watchList, addItemToWatchList, removeItemFromWatchList }}>
             {children}
         </WatchListContext.Provider>
     );
