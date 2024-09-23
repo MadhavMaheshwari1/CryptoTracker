@@ -13,7 +13,7 @@ const CoinDescriptionPage = () => {
   const [volumeData, setVolumeData] = useState([]);
   const [marketCapData, setMarketCapData] = useState([]);
   const [labels, setLabels] = useState([]);
-  const [selectedPeriod, setSelectedPeriod] = useState(30); // Default period in days
+  const [selectedPeriod, setSelectedPeriod] = useState(7); // Default period in days
 
   useEffect(() => {
     const fetchHistoricalData = async () => {
@@ -78,7 +78,7 @@ const CoinDescriptionPage = () => {
             <div className="group flex items-center lg:gap-4 gap-2 justify-start">
               <div className="group relative">
                 <button className={`${changeColor} group-hover:bg-current text-center xl:w-[80px] lg:text-md text-sm w-[60px] py-1 border-2 ${changeBorder} rounded-3xl sm:block hidden`}>{changeText}</button>
-                <button className={`${changeColor} top-0 left-0 absolute group-hover:opacity-100 group-hover:text-white text-center xl:w-[80px] lg:text-md text-sm w-[60px] py-1 border-2 ${changeBorder} rounded-3xl sm:block hidden transition-colors`}>{changeText}</button>
+                <button className={`${changeColor} top-0 left-0 absolute group-hover:opacity-100 group-hover:text-white text-center xl:w-[80px] sm:block hidden lg:text-md text-sm w-[60px] py-1 border-2 ${changeBorder} rounded-3xl transition-colors`}>{changeText}</button>
               </div>
             </div>
             <button className="group">
@@ -97,44 +97,46 @@ const CoinDescriptionPage = () => {
             </span>
           </div>
           <div className="group relative">
-            <button className={`lg:text-lg ${theme === 'dark' ? 'text-white' : 'text-black'}`}>${coinData.total_volume.toLocaleString()}</button>
+            <button className={`lg:text-lg ${theme === 'dark' ? 'text-white' : 'text-black'} md:block hidden`}>${formatNumber(coinData.total_volume)}</button>
             <span
-              className={`text-sm ${theme === 'dark' ? 'bg-gray-400' : 'bg-gray-200'} rounded-md px-2 pointer-events-none absolute -top-7 left-2 w-max opacity-0 transition-opacity group-hover:opacity-100 `}>
+              className={`text-sm ${theme === 'dark' ? 'bg-gray-400' : 'bg-gray-200'} rounded-md px-2 pointer-events-none absolute -top-7 -left-4 w-max opacity-0 transition-opacity group-hover:opacity-100 `}>
               Total Volume
             </span>
           </div>
           <div className="group relative">
-            <button className={`lg:text-lg ${theme === 'dark' ? 'text-white' : 'text-black'}`}>${coinData.market_cap.toLocaleString()}</button>
+            <button className={`lg:text-lg ${theme === 'dark' ? 'text-white' : 'text-black'}`}>${formatNumber(coinData.market_cap)}</button>
             <span
               className={`text-sm ${theme === 'dark' ? 'bg-gray-400' : 'bg-gray-200'} rounded-md px-2 pointer-events-none absolute -top-7 left-2 w-max opacity-0 transition-opacity group-hover:opacity-100 `}>
               Market Cap
             </span>
           </div>
           <div className="group relative">
-            <div className={`flex items-center border-2 rounded-full ${changeBorder} w-[40px] h-[40px] relative`}>
+            <div className={`flex items-center border-2 rounded-full ${changeBorder} lg:w-[40px] lg:h-[40px] w-[20px] h-[20px] relative`}>
               <div className={`absolute w-full h-full top-0 left-0 ${changeBackground} opacity-0 group-hover:opacity-100 transition-all rounded-full`}></div>
               <div className={`flex justify-center items-center cursor-pointer w-[25px] lg:w-[40px] rounded-full`}>
-                <FaRegStar className={`${changeColor} group-hover:text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all`} size={22} />
+                <FaRegStar className={`${changeColor} group-hover:text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all lg:text-md text-[12px]`}/>
               </div>
             </div>
           </div>
         </div>
       </div>
       <div className="py-6 px-8">
-        <div className="flex gap-4 items-center">
-          <label htmlFor="period" className="text-lg font-medium">Select Period:</label>
+        <div className="flex gap-4 items-center px-4">
+          <label htmlFor="period" className="md:text-lg text-sm font-medium">Price Change in:</label>
           <select
             id="period"
             value={selectedPeriod}
             onChange={handlePeriodChange}
-            className={`${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'} border-2 px-4 py-2 rounded-lg`}
+            style={{ fontSize: 12 }}
+            className={`${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'} border-2 px-4 py-2 rounded-lg cursor-pointer transition duration-200 hover:border-blue-500`}
           >
-            <option value={7}>7 Days</option>
-            <option value={30}>30 Days</option>
-            <option value={60}>60 Days</option>
-            <option value={90}>90 Days</option>
-            <option value={120}>120 Days</option>
+            <option value={7} className='md:text-md text-sm'>7 Days</option>
+            <option value={30} className='md:text-md text-sm'>30 Days</option>
+            <option value={60} className='md:text-md text-sm'>60 Days</option>
+            <option value={90} className='md:text-md text-sm'>90 Days</option>
+            <option value={120} className='md:text-md text-sm'>120 Days</option>
           </select>
+
         </div>
         <div className="py-6">
           <PriceChart priceData={priceData} volumeData={volumeData} marketCapData={marketCapData} labels={labels} />
