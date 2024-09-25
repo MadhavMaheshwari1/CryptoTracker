@@ -17,7 +17,7 @@ const CoinDescriptionPage = () => {
       if (index === -1) return -1; // If the character isn't found
     }
 
-    return index+1;
+    return index + 1;
   }
 
   const location = useLocation();
@@ -195,8 +195,8 @@ const CoinDescriptionPage = () => {
         <div className="py-6">
           <PriceChart priceData={priceData} volumeData={volumeData} marketCapData={marketCapData} labels={labels} />
         </div>
-        <div className={`coin--description px-6 md:text-xl text-[12px] ${theme === 'dark' ? 'text-gray-300' : ''}`}>
-          <p dangerouslySetInnerHTML={createMarkup(isExpanded ? desc : desc.slice(0, indexOfNthOccurrence(desc, '.', 3)))} />
+        <div className={`coin--description px-10 md:text-xl text-[12px] ${theme === 'dark' ? 'text-gray-300' : ''} rounded-xl py-8 mx-6 me-4 ${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'}`}>
+          <p dangerouslySetInnerHTML={createMarkup(isExpanded ? desc : desc.slice(0, indexOfNthOccurrence(desc, '.', 2)))} />
           {desc.length > (indexOfNthOccurrence(desc, '.', 3)) && (
             <button
               onClick={toggleReadMore}
