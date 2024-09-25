@@ -152,5 +152,11 @@ body {
 
 /* Button Disabling */
 .disabled {
-  opacity:0.5;
+  opacity: 0.5;
+}
+
+/* Coin Description */
+.coin--description a {
+  color: #3b82f6;
+  text-decoration: none !important;
 }

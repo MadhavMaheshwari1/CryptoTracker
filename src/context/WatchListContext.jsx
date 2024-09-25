@@ -18,17 +18,15 @@ const WatchListProvider = ({ children }) => {
     };
 
     const removeItemFromWatchList = (coinData) => {
-        const indexToRemove = watchList.findIndex(item => item.name === coinData.name);
+        const updatedArray = watchList.filter(item => item.name !== coinData.name);
 
-        if (indexToRemove !== -1) {
-            const updatedArray = [
-                ...watchList.slice(0, indexToRemove),
-                ...watchList.slice(indexToRemove + 1),
-            ];
+        // Only update if there's a change
+        if (updatedArray.length !== watchList.length) {
             localStorage.setItem('watchList', JSON.stringify(updatedArray)); // Save to localStorage
             setWatchList(updatedArray);
-        };
-    }
+        }
+    };
+
 
     return (
         <WatchListContext.Provider value={{ watchList, addItemToWatchList, removeItemFromWatchList }}>

@@ -4,13 +4,27 @@ import { ThemeContext } from '../context/ThemeContext';
 import { FaArrowTrendUp, FaArrowTrendDown, FaRegStar } from 'react-icons/fa6';
 import PriceChart from '../components/PriceChart'; // Import the area chart component
 import { FaSpinner } from "react-icons/fa6";
+import axios from 'axios';
 import { WatchListContext } from '../context/WatchListContext';
 
 const CoinDescriptionPage = () => {
+
+  function indexOfNthOccurrence(str, char, n) {
+    let index = -1;
+
+    for (let i = 0; i < n; i++) {
+      index = str.indexOf(char, index + 1);  // Find the next occurrence
+      if (index === -1) return -1; // If the character isn't found
+    }
+
+    return index+1;
+  }
+
   const location = useLocation();
   const [loading, setLoading] = useState(true);
   const { watchList, addItemToWatchList, removeItemFromWatchList } = useContext(WatchListContext);
   const { theme } = useContext(ThemeContext);
+  const [desc, setDesc] = useState('');
   const [itemAdded, setItemAdded] = useState(false);
   const { coinData } = location.state || {}; // Extract the coin data
 
@@ -18,18 +32,28 @@ const CoinDescriptionPage = () => {
   const [volumeData, setVolumeData] = useState([]);
   const [marketCapData, setMarketCapData] = useState([]);
   const [labels, setLabels] = useState([]);
+  const [isExpanded, setIsExpanded] = useState(false); // Track the "Read More/Less" state
   const [selectedPeriod, setSelectedPeriod] = useState(7); // Default period in days
+
+  const createMarkup = (htmlText) => {
+    return { __html: htmlText };
+  };
+
+  const toggleReadMore = () => {
+    setIsExpanded(!isExpanded);
+  };
 
   useEffect(() => {
     const fetchHistoricalData = async () => {
       try {
-        const response = await fetch(`https://api.coingecko.com/api/v3/coins/${coinData.id}/market_chart?vs_currency=usd&days=${selectedPeriod}`);
-        const result = await response.json();
-        const prices = result.prices.map(price => price[1]); // Extract only the price values
-        const volumes = result.total_volumes.map(volume => volume[1]); // Extract only the volume values
-        const marketCaps = result.market_caps.map(marketCap => marketCap[1]); // Extract only the market cap values
-        const dates = result.prices.map(price => new Date(price[0])); // Convert timestamp to Date
+        const result = await axios.get(`https://api.coingecko.com/api/v3/coins/${coinData.id}/market_chart?vs_currency=usd&days=${selectedPeriod}`);
+        const desc = await axios.get(`https://api.coingecko.com/api/v3/coins/${coinData.id}`);
+        const prices = result.data.prices.map(price => price[1]); // Extract only the price values
+        const volumes = result.data.total_volumes.map(volume => volume[1]); // Extract only the volume values
+        const marketCaps = result.data.market_caps.map(marketCap => marketCap[1]); // Extract only the market cap values
+        const dates = result.data.prices.map(price => new Date(price[0])); // Convert timestamp to Date
 
+        setDesc(desc.data.description.en);
         setPriceData(prices);
         setVolumeData(volumes);
         setMarketCapData(marketCaps);
@@ -67,19 +91,26 @@ const CoinDescriptionPage = () => {
     }
   }
 
-  useEffect(() => {
-    const isItemInWatchList = watchList.some(item => item.name === coinData.name);
-    setItemAdded(isItemInWatchList);
-  }, [coinData, watchList]);
+  // useEffect(() => {
+  //   const isItemInWatchList = watchList.some(item => item.name === coinData.name);
+  //   setItemAdded(isItemInWatchList);
+  // }, []);
 
   const watchListHandler = (coinData) => {
-    if (itemAdded) {
-      removeItemFromWatchList(coinData);
-    } else {
-      addItemToWatchList(coinData);
-    }
-    setItemAdded(!itemAdded); // Toggle the state
+    // Use a callback function to access the latest state
+    setItemAdded(prevItemAdded => {
+      const newItemAdded = !prevItemAdded; // Toggle the state
+
+      if (newItemAdded) {
+        addItemToWatchList(coinData);
+      } else {
+        removeItemFromWatchList(coinData);
+      }
+
+      return newItemAdded; // Return the new state
+    });
   };
+
 
   if (loading) {
     return <div className='w-[90vw] h-[100vh] flex justify-center items-center animate-spin'><FaSpinner size={102} /></div>;
@@ -135,10 +166,10 @@ const CoinDescriptionPage = () => {
             </span>
           </div>
           <div className="group relative cursor-pointer" onClick={() => watchListHandler(coinData)}>
-            <div className={`flex items-center border-2 rounded-full ${changeBorder} lg:w-[40px] lg:h-[40px] w-[20px] h-[20px] relative`}>
+            <div className={`flex items-center border-2 rounded-full ${changeBorder} lg:w-[40px] lg:h-[40px] w-[20px] h-[20px] relative ${itemAdded && changeBackground}`}>
               <div className={`absolute w-full h-full top-0 left-0 ${changeBackground} opacity-0 group-hover:opacity-100 transition-all rounded-full`}></div>
               <div className={`flex justify-center items-center cursor-pointer w-[25px] lg:w-[40px] rounded-full`}>
-                <FaRegStar className={`${changeColor} group-hover:text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all lg:text-md text-[12px] md:text-[18px]`} />
+                <FaRegStar className={`${changeColor}  group-hover:text-white absolute ${itemAdded && "text-white"} top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all lg:text-md text-[12px] md:text-[18px]`} />
               </div>
             </div>
           </div>
@@ -160,11 +191,22 @@ const CoinDescriptionPage = () => {
             <option value={90} className='md:text-md text-sm'>90 Days</option>
             <option value={120} className='md:text-md text-sm'>120 Days</option>
           </select>
-
         </div>
         <div className="py-6">
           <PriceChart priceData={priceData} volumeData={volumeData} marketCapData={marketCapData} labels={labels} />
         </div>
+        <div className={`coin--description px-6 md:text-xl text-[12px] ${theme === 'dark' ? 'text-gray-300' : ''}`}>
+          <p dangerouslySetInnerHTML={createMarkup(isExpanded ? desc : desc.slice(0, indexOfNthOccurrence(desc, '.', 3)))} />
+          {desc.length > (indexOfNthOccurrence(desc, '.', 3)) && (
+            <button
+              onClick={toggleReadMore}
+              className="text-blue-500 hover:underline mt-2 block"
+            >
+              {isExpanded ? 'Read Less' : 'Read More'}
+            </button>
+          )}
+        </div>
+
       </div>
     </div>
   );
