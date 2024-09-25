@@ -4,6 +4,7 @@ import { ThemeContext } from '../context/ThemeContext';
 import { FaArrowTrendUp, FaArrowTrendDown, FaRegStar } from 'react-icons/fa6';
 import PriceChart from '../components/PriceChart'; // Import the area chart component
 import { FaSpinner } from "react-icons/fa6";
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { WatchListContext } from '../context/WatchListContext';
 
@@ -24,6 +25,8 @@ const CoinDescriptionPage = () => {
   const [loading, setLoading] = useState(true);
   const { watchList, addItemToWatchList, removeItemFromWatchList } = useContext(WatchListContext);
   const { theme } = useContext(ThemeContext);
+  const [timer, setTimer] = useState(0);
+  const [error, setError] = useState({ error: false, errorMessage: null });
   const [desc, setDesc] = useState('');
   const [itemAdded, setItemAdded] = useState(false);
   const { coinData } = location.state || {}; // Extract the coin data
@@ -43,33 +46,46 @@ const CoinDescriptionPage = () => {
     setIsExpanded(!isExpanded);
   };
 
+  const fetchHistoricalData = async () => {
+    try {
+      const result = await axios.get(`https://api.coingecko.com/api/v3/coins/${coinData.id}/market_chart?vs_currency=usd&days=${selectedPeriod}`);
+      const desc = await axios.get(`https://api.coingecko.com/api/v3/coin/${coinData.id}`);
+      const prices = result.data.prices.map(price => price[1]); // Extract only the price values
+      const volumes = result.data.total_volumes.map(volume => volume[1]); // Extract only the volume values
+      const marketCaps = result.data.market_caps.map(marketCap => marketCap[1]); // Extract only the market cap values
+      const dates = result.data.prices.map(price => new Date(price[0])); // Convert timestamp to Date
+
+      setError(() => {
+        return ({ error: false })
+      });
+
+      setDesc(desc.data.description.en);
+      setPriceData(prices);
+      setVolumeData(volumes);
+      setMarketCapData(marketCaps);
+      setLabels(dates);
+      setLoading(false);
+    } catch (err) {
+      setTimer(10);
+      setError(() => {
+        return ({ error: true, errorMessage: err.message })
+      });
+      console.error('Error fetching historical data:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchHistoricalData = async () => {
-      try {
-        const result = await axios.get(`https://api.coingecko.com/api/v3/coins/${coinData.id}/market_chart?vs_currency=usd&days=${selectedPeriod}`);
-        const desc = await axios.get(`https://api.coingecko.com/api/v3/coins/${coinData.id}`);
-        const prices = result.data.prices.map(price => price[1]); // Extract only the price values
-        const volumes = result.data.total_volumes.map(volume => volume[1]); // Extract only the volume values
-        const marketCaps = result.data.market_caps.map(marketCap => marketCap[1]); // Extract only the market cap values
-        const dates = result.data.prices.map(price => new Date(price[0])); // Convert timestamp to Date
-
-        setDesc(desc.data.description.en);
-        setPriceData(prices);
-        setVolumeData(volumes);
-        setMarketCapData(marketCaps);
-        setLabels(dates);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching historical data:', error);
-      }
-    };
-
     fetchHistoricalData();
   }, [selectedPeriod, coinData.id]);
 
   const handlePeriodChange = (event) => {
     setSelectedPeriod(Number(event.target.value));
   };
+
+  const retryHandler = () => {
+    fetchHistoricalData();
+    setLoading(true);
+  }
 
   const percentageChange = coinData.price_change_percentage_24h.toFixed(2);
   const isPositive = percentageChange > 0;
@@ -111,9 +127,46 @@ const CoinDescriptionPage = () => {
     });
   };
 
+  useEffect(() => {
+    if (error.error) {
+      const interval = setInterval(() => {
+        setTimer((prevTimer) => {
+          if (prevTimer >= 1) {
+            return prevTimer - 1; // Decrease timer
+          } else {
+            clearInterval(interval);
+            setTimer(0); // Reset timer to 0
+            return 0; // Ensure timer stays at 0
+          }
+        });
+      }, 1000);
+      return () => clearInterval(interval); // Clean up interval on component unmount
+    }
+  }, [error]);
+
 
   if (loading) {
     return <div className='w-[90vw] h-[100vh] flex justify-center items-center animate-spin'><FaSpinner size={102} /></div>;
+  }
+
+  if (error.error) {
+    return (
+      <div className="grid h-screen place-content-center px-4">
+        <div className="text-center">
+          <p className="text-3xl font-bold tracking-tight text-gray-600 sm:text-7xl">Uh-oh!</p>
+          <p className="mt-4 text-xl text-gray-500">{error.errorMessage}</p>
+          <p className="mt-4 text-gray-500 text-xl">Retry after: {timer} seconds</p>
+          <div className="flex flex-col gap-4 text-xl">
+            <Link
+              to="/"
+              className="mt-6 inline-block rounded bg-indigo-600 px-5 py-3 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring"
+            >
+              Go Back Home
+            </Link>
+            {timer === 0 && (<button className="bg-indigo-600 py-2 px-4 rounded-md hover:bg-indigo-700" onClick={() => retryHandler()}>Retry</button>)}</div>
+        </div>
+      </div>
+    );
   }
 
   return (
