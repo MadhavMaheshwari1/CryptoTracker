@@ -15,9 +15,56 @@ const ComparePage = () => {
   const [selectedCoin2, setSelectedCoin2] = useState([]);
   const [coinOne, setCoinOne] = useState('bitcoin');
   const [coinTwo, setCoinTwo] = useState('ethereum');
+  const [coinData, setCoinData] = useState([]); // Array to hold both coinOne and coinTwo data
+  const [labels, setLabels] = useState([]);
   const [period, setPeriod] = useState(7);
   const [error, setError] = useState({ error: false, errorMessage: null });
   const [timer, setTimer] = useState(0);
+
+  const fetchHistoricalData = async () => {
+    try {
+      const [resultCoinOne, resultCoinTwo] = await Promise.all([
+        axios.get(`https://api.coingecko.com/api/v3/coins/${coinOne}/market_chart?vs_currency=usd&days=${period}`),
+        axios.get(`https://api.coingecko.com/api/v3/coins/${coinTwo}/market_chart?vs_currency=usd&days=${period}`)
+      ]);
+
+      // Process CoinOne data
+      const pricesCoinOne = resultCoinOne.data.prices.map(price => price[1]);
+      const volumesCoinOne = resultCoinOne.data.total_volumes.map(volume => volume[1]);
+      const marketCapsCoinOne = resultCoinOne.data.market_caps.map(marketCap => marketCap[1]);
+
+      // Process CoinTwo data
+      const pricesCoinTwo = resultCoinTwo.data.prices.map(price => price[1]);
+      const volumesCoinTwo = resultCoinTwo.data.total_volumes.map(volume => volume[1]);
+      const marketCapsCoinTwo = resultCoinTwo.data.market_caps.map(marketCap => marketCap[1]);
+
+      // Dates (can be taken from any of the coin data as they have the same timestamps)
+      const dates = resultCoinOne.data.prices.map(price => new Date(price[0]));
+
+      // Set coin data as an array of objects
+      setCoinData([
+        {
+          name: coinOne,
+          priceData: pricesCoinOne,
+          volumeData: volumesCoinOne,
+          marketCapData: marketCapsCoinOne,
+        },
+        {
+          name: coinTwo,
+          priceData: pricesCoinTwo,
+          volumeData: volumesCoinTwo,
+          marketCapData: marketCapsCoinTwo,
+        }
+      ]);
+
+      setLabels(dates);
+      setLoading(false);
+    } catch (err) {
+      setTimer(10);
+      setError(() => ({ error: true, errorMessage: err.message }));
+      setLoading(false);
+    }
+  };
 
   const fetchCoinsData = async () => {
     const cachedData = localStorage.getItem('cryptoData');
@@ -25,76 +72,45 @@ const ComparePage = () => {
     const currentTime = new Date().getTime();
 
     if (cachedData && cachedTimestamp && (currentTime - parseInt(cachedTimestamp, 10)) < 180000) {
-        const coinsList = cachedData ? JSON.parse(cachedData) : [];
-        setCoins1(coinsList.filter(coin => coin.id !== coinTwo));
-        setCoins2(coinsList.filter(coin => coin.id !== coinOne));
-        setSelectedCoin1(coinsList.find(coin => coin.id === coinOne) || null); // Use find to get the single coin
-        setSelectedCoin2(coinsList.find(coin => coin.id === coinTwo) || null); // Use find to get the single coin
-        setLoading(false);
-        return;
+      const coinsList = JSON.parse(cachedData);
+      setCoins1(coinsList.filter(coin => coin.id !== coinTwo));
+      setCoins2(coinsList.filter(coin => coin.id !== coinOne));
+      setSelectedCoin1(coinsList.find(coin => coin.id === coinOne) || null);
+      setSelectedCoin2(coinsList.find(coin => coin.id === coinTwo) || null);
+      setLoading(false);
+      return;
     }
 
     try {
-        const response = await axios.get(`https://api.coingecko.com/api/v3/coins/markets`, {
-            params: {
-                vs_currency: 'usd',
-                order: 'market_cap_desc',
-                per_page: 100,
-                page: 1,
-                sparkline: false,
-            },
-        });
+      const response = await axios.get(`https://api.coingecko.com/api/v3/coins/markets`, {
+        params: {
+          vs_currency: 'usd',
+          order: 'market_cap_desc',
+          per_page: 100,
+          page: 1,
+          sparkline: false,
+        },
+      });
 
-        setError({ error: false });
-        const coinsList = response.data;
-        setCoins1(coinsList.filter(coin => coin.id !== coinTwo));
-        setCoins2(coinsList.filter(coin => coin.id !== coinOne));
-        setSelectedCoin1(coinsList.find(coin => coin.id === coinOne) || null); // Use find
-        setSelectedCoin2(coinsList.find(coin => coin.id === coinTwo) || null); // Use find
-        localStorage.setItem('cryptoData', JSON.stringify(response.data));
-        localStorage.setItem('cryptoDataTimestamp', currentTime.toString());
-        setLoading(false);
+      const coinsList = response.data;
+      setCoins1(coinsList.filter(coin => coin.id !== coinTwo));
+      setCoins2(coinsList.filter(coin => coin.id !== coinOne));
+      setSelectedCoin1(coinsList.find(coin => coin.id === coinOne) || null);
+      setSelectedCoin2(coinsList.find(coin => coin.id === coinTwo) || null);
+      localStorage.setItem('cryptoData', JSON.stringify(coinsList));
+      localStorage.setItem('cryptoDataTimestamp', currentTime.toString());
+      setLoading(false);
     } catch (err) {
-        setTimer(10);
-        setError({ error: true, errorMessage: err.message });
-        setLoading(false);
+      setTimer(10);
+      setError({ error: true, errorMessage: err.message });
+      setLoading(false);
     }
-};
-
-
-  useEffect(() => {
-    fetchCoinsData();
-  }, [coinOne, coinTwo]); // Fetch data when coinOne or coinTwo changes
-
-  useEffect(() => {
-    fetchCoinsData();
-  }, []); // Fetch data when initially
-
-  useEffect(() => {
-    if (error.error) {
-      const interval = setInterval(() => {
-        setTimer((prevTimer) => {
-          if (prevTimer > 1) {
-            return prevTimer - 1; // Decrease timer
-          } else {
-            clearInterval(interval);
-            setTimer(0); // Reset timer to 0
-            return 0; // Ensure timer stays at 0
-          }
-        });
-      }, 1000);
-      return () => clearInterval(interval); // Clean up interval on component unmount
-    }
-  }, [error]);
-
-  const retryHandler = () => {
-    fetchCoinsData();
-    setLoading(true);
   };
 
-  const handlePeriodChange = (event) => {
-    setPeriod(Number(event.target.value));
-  };
+  useEffect(() => {
+    fetchCoinsData();
+    fetchHistoricalData();
+  }, [coinOne, coinTwo, period]);
 
   if (loading) {
     return <div className='w-[90vw] h-[100vh] flex justify-center items-center animate-spin'><FaSpinner size={102} /></div>;
@@ -151,20 +167,25 @@ const ComparePage = () => {
           <select
             id="period"
             value={period}
-            onChange={handlePeriodChange}
-            className={`${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'} lg:w-40 w-[100px] border p-2 lg:text-md text-sm cursor-pointer transition duration-200 hover:border-blue-500`}
+            onChange={(e) => setPeriod(parseInt(e.target.value))}
+            className="p-2 border rounded bg-transparent lg:w-40 w-[86px] cursor-pointer hover:border-blue-500"
           >
-            <option value={7} className='md:text-md text-sm'>7 Days</option>
-            <option value={30} className='md:text-md text-sm'>30 Days</option>
-            <option value={60} className='md:text-md text-sm'>60 Days</option>
-            <option value={90} className='md:text-md text-sm'>90 Days</option>
-            <option value={120} className='md:text-md text-sm'>120 Days</option>
+            <option value={7}>1 Week</option>
+            <option value={14}>2 Weeks</option>
+            <option value={30}>1 Month</option>
+            <option value={180}>6 Months</option>
+            <option value={365}>1 Year</option>
           </select>
         </div>
       </div>
-      {/* Pass coinOne and coinTwo to the List component */}
+      {/* Pass the array of coins data to PriceChart */}
+      <PriceChart
+        coins={coinData}
+        labels={labels}
+        period={period}
+      />
       <List coinData={selectedCoin1}/>
-      <List coinData={selectedCoin2} />
+      <List coinData={selectedCoin2}/>
     </div>
   );
 };

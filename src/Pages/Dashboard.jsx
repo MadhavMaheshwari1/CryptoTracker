@@ -232,7 +232,7 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
             return (
               <Link
                 to={`/Dashboard/${coin.name}`}
-                state={{ coinData: coin }} // Pass specific coin data here
+                state={{ coinData: {coin} }} // Pass specific coin data here
                 key={coin.id}
                 ref={cardRef}
                 className={`${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'} md:py-5 md:px-6 px-2 py-2 rounded-xl flex ${gridLayout ? 'h-[300px] flex-col py-4 px-4' : 'grid  sm:grid-cols-[30%,20%,10%,40%] grid-cols-[55%,0%,15%,30%] justify-between items-center'} border-2 border-transparent transition-colors duration-300`}

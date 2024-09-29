@@ -27,7 +27,7 @@ ChartJS.register(
 
 import { ThemeContext } from '../context/ThemeContext';
 
-const PriceChart = ({ priceData, volumeData, marketCapData, labels }) => {
+const PriceChart = ({ coins, labels }) => {
   const { theme } = useContext(ThemeContext);
   const [selectedData, setSelectedData] = useState('price'); // Track selected dataset
 
@@ -36,44 +36,43 @@ const PriceChart = ({ priceData, volumeData, marketCapData, labels }) => {
     setSelectedData(dataset);
   };
 
+  // Generate datasets based on the selected type (price, volume, marketCap) and the number of coins
+  const datasets = coins.map((coin, index) => {
+    const colorMap = ['#3B82F6', '#EF4444']; // Blue for first coin, Red for second coin
+    const backgroundColorMap = ['rgba(59, 130, 246, 0.2)', 'rgba(239, 68, 68, 0.2)']; // Corresponding background colors
+
+    let data;
+
+    switch (selectedData) {
+      case 'price':
+        data = coin.priceData;
+        break;
+      case 'volume':
+        data = coin.volumeData;
+        break;
+      case 'marketCap':
+        data = coin.marketCapData;
+        break;
+      default:
+        data = [];
+    }
+
+    return {
+      label: `${coin.name} ${selectedData.charAt(0).toUpperCase() + selectedData.slice(1)}`,
+      data,
+      borderColor: colorMap[index],  // Choose color based on coin index
+      backgroundColor: backgroundColorMap[index],
+      tension: 0.5,  // Smoother curve
+      borderWidth: 1,
+      pointRadius: 0,  // No visible points on the line
+      pointHoverRadius: 5,  // Points visible when hovered
+    };
+  });
+
   // Data for the chart based on selected dataset
   const data = {
     labels,  // X-axis labels (e.g., time)
-    datasets: [
-      selectedData === 'price' && {
-        label: 'Price',
-        data: priceData,
-        borderColor: '#3B82F6',  // Blue glowing line
-        backgroundColor: 'rgba(59, 130, 246, 0.2)',  // Light blue with 20% opacity
-        fill: true,  // Fill below the line
-        tension: 0.5,  // Smoother curve
-        borderWidth: 1,
-        pointRadius: 0,  // No visible points on the line
-        pointHoverRadius: 5,  // Points visible when hovered
-      },
-      selectedData === 'volume' && {
-        label: 'Volume',
-        data: volumeData,
-        borderColor: '#22C55E',  // Green glowing line
-        backgroundColor: 'rgba(34, 197, 94, 0.2)',  // Light green with 20% opacity
-        fill: true,
-        tension: 0.5,
-        borderWidth: 1,
-        pointRadius: 0,
-        pointHoverRadius: 5,
-      },
-      selectedData === 'marketCap' && {
-        label: 'Market Cap',
-        data: marketCapData,
-        borderColor: '#EF4444',  // Red glowing line
-        backgroundColor: 'rgba(239, 68, 68, 0.2)',  // Light red with 20% opacity
-        fill: true,
-        tension: 0.5,
-        borderWidth: 1,
-        pointRadius: 0,
-        pointHoverRadius: 5,
-      },
-    ].filter(Boolean),  // Remove any false datasets
+    datasets,
   };
 
   // Determine axis color based on theme
@@ -106,7 +105,7 @@ const PriceChart = ({ priceData, volumeData, marketCapData, labels }) => {
     },
     plugins: {
       legend: {
-        display: false,
+        display: true,  // Enable legend for multiple datasets
       },
       tooltip: {
         enabled: true,
@@ -130,9 +129,6 @@ const PriceChart = ({ priceData, volumeData, marketCapData, labels }) => {
       intersect: false,  // Allows hovering over filled area to show points
     },
   };
-
-
-
 
   return (
     <div className='px-4'>
