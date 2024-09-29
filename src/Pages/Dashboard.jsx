@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { ThemeContext } from '../context/ThemeContext';
+import { WatchListContext } from '../context/WatchListContext';
 import { FaSpinner } from "react-icons/fa6";
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
@@ -14,8 +15,10 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
   const [cryptoData, setCryptoData] = useState([]);
   const [filteredCryptoData, setFilteredCryptoData] = useState([]);
   const [timer, setTimer] = useState(0);
+  const { watchList, addItemToWatchList, removeItemFromWatchList } = useContext(WatchListContext);
   const [loading, setLoading] = useState(true);
   const { theme } = useContext(ThemeContext);
+  const [itemAdded, setItemAdded] = useState([]);
   const [start, setStart] = useState(1);
   const [error, setError] = useState({ error: false, errorMessage: null });
   const [gridLayout, setGridLayout] = useState(true);
@@ -38,6 +41,21 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
   const startHandler = (index) => {
     setStart(index + 1);
   }
+
+  const watchListHandler = (coinData, e, index) => {
+    e.preventDefault();
+    e.stopPropagation(); // Prevents event propagation
+    setItemAdded((prevState) => {
+      const isAdded = prevState.includes(index);
+      if (isAdded) {
+        removeItemFromWatchList(coinData);
+        return prevState.filter(i => i !== index);
+      } else {
+        addItemToWatchList(coinData);
+        return [...prevState, index];
+      }
+    });
+  };
 
   // const timerHandler = () => {
   //   setTimer(timer => (timer>timer - 1));
@@ -144,7 +162,6 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
               Go Back Home
             </Link>
             {timer === 0 && (<button className="bg-indigo-600 py-2 px-4 rounded-md hover:bg-indigo-700" onClick={() => retryHandler()}>Retry</button>)}</div>
-
         </div>
       </div>
     );
@@ -233,10 +250,12 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
                     </div>
                   </div>
                   {gridLayout && (
-                    <div className={`cursor pointer flex items-center border-2 rounded-full ${changeBorder} lg:w-[40px] lg:h-[40px] h-[25px] w-[25px] group relative`}>
-                      <div className={`absolute w-full h-full top-0 left-0 ${changeBackground} opacity-0 group-hover:opacity-100 transition-all rounded-full`}></div>
-                      <div className={`flex justify-center items-center w-[25px] lg:w-[40px] rounded-full`}>
-                        <FaRegStar className={`${changeColor} group-hover:text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all lg:text-md md:text-[18px] text-[12px]`} />
+                    <div className="group relative cursor-pointer" onClick={(e) => watchListHandler(coin, e, index)}>
+                      <div className={`flex items-center border-2 rounded-full ${changeBorder} lg:w-[40px] lg:h-[40px] w-[20px] h-[20px] relative ${itemAdded[index] && changeBackground}`}>
+                        <div className={`absolute w-full h-full top-0 left-0 ${changeBackground} opacity-0 group-hover:opacity-100 transition-all rounded-full`}></div>
+                        <div className={`flex justify-center items-center cursor-pointer w-[25px] lg:w-[40px] rounded-full`}>
+                          <FaRegStar className={`${changeColor}  group-hover:text-white absolute ${itemAdded[index] && "text-white"} top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all lg:text-md text-[12px] md:text-[18px]`} />
+                        </div>
                       </div>
                     </div>
                   )
@@ -281,10 +300,12 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
                   {!gridLayout && (<h1 className={`lg:text-lg ${gridLayout ? 'text-lg' : 'text-sm'} ${theme === 'dark' ? 'text-white' : 'text-black'} md:block hidden`}>${formatNumber(coin.total_volume)}</h1>)}
                   {!gridLayout && (<h1 className={`lg:text-lg ${gridLayout ? 'text-lg' : 'text-sm'} first-line:${theme === 'dark' ? 'text-white' : 'text-black'}`}>${formatNumber(coin.market_cap)}</h1>)}
                   {!gridLayout && (
-                    <div className={`cursor-pointer flex items-center border-2 rounded-full ${changeBorder} lg:w-[40px] lg:h-[40px] h-[20px] w-[20px] group relative`}>
-                      <div className={`absolute w-full h-full top-0 left-0 ${changeBackground} opacity-0 group-hover:opacity-100 transition-all rounded-full`}></div>
-                      <div className={`flex justify-center items-center lg:w-[40px] rounded-full`}>
-                        <FaRegStar className={`${changeColor} md:text-[18px] text-[12px] group-hover:text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all lg:text-md`} />
+                    <div className="group relative cursor-pointer" onClick={(e) => watchListHandler(coin, e, index)}>
+                      <div className={`flex items-center border-2 rounded-full ${changeBorder} lg:w-[40px] lg:h-[40px] w-[20px] h-[20px] relative ${itemAdded[index] && changeBackground}`}>
+                        <div className={`absolute w-full h-full top-0 left-0 ${changeBackground} opacity-0 group-hover:opacity-100 transition-all rounded-full`}></div>
+                        <div className={`flex justify-center items-center cursor-pointer w-[25px] lg:w-[40px] rounded-full`}>
+                          <FaRegStar className={`${changeColor}  group-hover:text-white absolute ${itemAdded[index] && "text-white"} top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all lg:text-md text-[12px] md:text-[18px]`} />
+                        </div>
                       </div>
                     </div>
                   )
