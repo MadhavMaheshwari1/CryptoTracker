@@ -58,7 +58,7 @@ const PriceChart = ({ coins, labels }) => {
     }
 
     return {
-      label: `${coin.name} ${selectedData.charAt(0).toUpperCase() + selectedData.slice(1)}`,
+      label: `${coin.name.slice(0,1).toUpperCase()+coin.name.slice(1)} ${selectedData.charAt(0).toUpperCase() + selectedData.slice(1)}`,
       data,
       borderColor: colorMap[index],  // Choose color based on coin index
       backgroundColor: backgroundColorMap[index],

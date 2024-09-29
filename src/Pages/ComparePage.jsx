@@ -40,7 +40,7 @@ const ComparePage = () => {
 
   const fetchHistoricalData = async () => {
     try {
-      const [resultCoinOne, resultCoinTwo, desc1,desc2] = await Promise.all([
+      const [resultCoinOne, resultCoinTwo, desc1, desc2] = await Promise.all([
         axios.get(`https://api.coingecko.com/api/v3/coins/${coinOne}/market_chart?vs_currency=usd&days=${period}`),
         axios.get(`https://api.coingecko.com/api/v3/coins/${coinTwo}/market_chart?vs_currency=usd&days=${period}`),
         axios.get(`https://api.coingecko.com/api/v3/coins/${coinOne}`),
@@ -80,7 +80,7 @@ const ComparePage = () => {
       setLabels(dates);
       setLoading(false);
     } catch (err) {
-      setTimer(10);
+      setTimer(60);
       setError(() => ({ error: true, errorMessage: err.message }));
       setLoading(false);
     }
@@ -132,7 +132,7 @@ const ComparePage = () => {
       localStorage.setItem('cryptoDataTimestamp', currentTime.toString());
       setLoading(false);
     } catch (err) {
-      setTimer(10);
+      setTimer(60);
       setError({ error: true, errorMessage: err.message });
       setLoading(false);
     }
@@ -221,18 +221,18 @@ const ComparePage = () => {
             id="period"
             value={period}
             onChange={(e) => setPeriod(parseInt(e.target.value))}
-            className="p-2 border rounded bg-transparent lg:w-40 w-[86px] cursor-pointer hover:border-blue-500"
+            className="p-2 border rounded lg:w-40 w-[86px] cursor-pointer hover:border-blue-500 bg-transparent"
           >
-            <option value={7}>7 Days</option>
-            <option value={30}>30 Days</option>
-            <option value={60}>60 Days</option>
-            <option value={90}>90 Days</option>
-            <option value={120}>120 Days</option>
+            <option value={7} className='bg-transparent'>7 Days</option>
+            <option value={30} className='bg-transparent'>30 Days</option>
+            <option value={60} className='bg-transparent'>60 Days</option>
+            <option value={90} className='bg-transparent'>90 Days</option>
+            <option value={120} className='bg-transparent'>120 Days</option>
           </select>
         </div>
       </div>
       {/* Pass the array of coins data to PriceChart */}
-      <div className="px-4">      <PriceChart
+      <div className="px-4"><PriceChart
         coins={coinData}
         labels={labels}
         period={period}
