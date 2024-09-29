@@ -144,7 +144,7 @@ const PaginatedDashboard = ({ noOfCoinsPerPage }) => {
   }
 
   if (loading) {
-    return <div className='w-[90vw] h-[100vh] flex justify-center items-center animate-spin'><FaSpinner size={102} /></div>;
+    return <div className='w-[90vw] h-[100vh] flex justify-center items-center animate-spin'><FaSpinner size={52} /></div>;
   }
 
   if (error.error) {
