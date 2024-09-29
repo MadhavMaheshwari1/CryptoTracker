@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import PriceChart from '../components/PriceChart';
+import List from '../components/List'; // Import the List component
 import { Link } from 'react-router-dom';
 import { FaSpinner } from "react-icons/fa6";
 import { ThemeContext } from '../context/ThemeContext';
@@ -10,6 +11,8 @@ const ComparePage = () => {
   const [coins1, setCoins1] = useState([]);
   const [coins2, setCoins2] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCoin1, setSelectedCoin1] = useState([]);
+  const [selectedCoin2, setSelectedCoin2] = useState([]);
   const [coinOne, setCoinOne] = useState('bitcoin');
   const [coinTwo, setCoinTwo] = useState('ethereum');
   const [period, setPeriod] = useState(7);
@@ -22,48 +25,56 @@ const ComparePage = () => {
     const currentTime = new Date().getTime();
 
     if (cachedData && cachedTimestamp && (currentTime - parseInt(cachedTimestamp, 10)) < 180000) {
-      const coinsList = JSON.parse(cachedData);
-      setCoins1(coinsList.filter(coins => coins.id !== coinTwo));
-      setCoins2(coinsList.filter(coins => coins.id !== coinOne));
-      setLoading(false);
-      return;
+        const coinsList = cachedData ? JSON.parse(cachedData) : [];
+        setCoins1(coinsList.filter(coin => coin.id !== coinTwo));
+        setCoins2(coinsList.filter(coin => coin.id !== coinOne));
+        setSelectedCoin1(coinsList.find(coin => coin.id === coinOne) || null); // Use find to get the single coin
+        setSelectedCoin2(coinsList.find(coin => coin.id === coinTwo) || null); // Use find to get the single coin
+        setLoading(false);
+        return;
     }
 
     try {
-      const response = await axios.get(
-        `https://api.coingecko.com/api/v3/coins/markets`,
-        {
-          params: {
-            vs_currency: 'usd',
-            order: 'market_cap_desc',
-            per_page: 100,
-            page: 1,
-            sparkline: false,
-          },
-        }
-      );
-      const coinsList = response.data;
-      setCoins1(coinsList.filter(coins => coins.id !== coinTwo));
-      setCoins2(coinsList.filter(coins => coins.id !== coinOne));
-      localStorage.setItem('cryptoData', JSON.stringify(coinsList));
-      localStorage.setItem('cryptoDataTimestamp', currentTime.toString());
-      setLoading(false);
+        const response = await axios.get(`https://api.coingecko.com/api/v3/coins/markets`, {
+            params: {
+                vs_currency: 'usd',
+                order: 'market_cap_desc',
+                per_page: 100,
+                page: 1,
+                sparkline: false,
+            },
+        });
+
+        setError({ error: false });
+        const coinsList = response.data;
+        setCoins1(coinsList.filter(coin => coin.id !== coinTwo));
+        setCoins2(coinsList.filter(coin => coin.id !== coinOne));
+        setSelectedCoin1(coinsList.find(coin => coin.id === coinOne) || null); // Use find
+        setSelectedCoin2(coinsList.find(coin => coin.id === coinTwo) || null); // Use find
+        localStorage.setItem('cryptoData', JSON.stringify(response.data));
+        localStorage.setItem('cryptoDataTimestamp', currentTime.toString());
+        setLoading(false);
     } catch (err) {
-      setTimer(10);
-      setError({ error: true, errorMessage: err.message });
-      setLoading(false);
+        setTimer(10);
+        setError({ error: true, errorMessage: err.message });
+        setLoading(false);
     }
-  };
+};
+
 
   useEffect(() => {
     fetchCoinsData();
-  }, []);
+  }, [coinOne, coinTwo]); // Fetch data when coinOne or coinTwo changes
+
+  useEffect(() => {
+    fetchCoinsData();
+  }, []); // Fetch data when initially
 
   useEffect(() => {
     if (error.error) {
       const interval = setInterval(() => {
         setTimer((prevTimer) => {
-          if (prevTimer >= 1) {
+          if (prevTimer > 1) {
             return prevTimer - 1; // Decrease timer
           } else {
             clearInterval(interval);
@@ -75,15 +86,6 @@ const ComparePage = () => {
       return () => clearInterval(interval); // Clean up interval on component unmount
     }
   }, [error]);
-
-  useEffect(() => {
-    setCoins1(coinsList => coinsList.filter(coins => coins.id !== coinTwo));
-    setCoins2(coinsList => coinsList.filter(coins => coins.id !== coinOne));
-  }, [coins1, coins2]);
-
-  useEffect(() => {
-    fetchCoinsData();
-  }, [period, coins1, coins2]);
 
   const retryHandler = () => {
     fetchCoinsData();
@@ -107,7 +109,7 @@ const ComparePage = () => {
           <p className="mt-4 text-gray-500 text-xl">Retry after: {timer} seconds</p>
           <div className="flex flex-col gap-4 text-xl">
             <Link to="/" className="mt-6 inline-block rounded bg-indigo-600 px-5 py-3 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring">Go Back Home</Link>
-            {timer === 0 && (<button className="bg-indigo-600 py-2 px-4 rounded-md hover:bg-indigo-700" onClick={() => retryHandler()}>Retry</button>)}
+            {timer === 0 && (<button className="bg-indigo-600 py-2 px-4 rounded-md hover:bg-indigo-700" onClick={retryHandler}>Retry</button>)}
           </div>
         </div>
       </div>
@@ -160,7 +162,10 @@ const ComparePage = () => {
           </select>
         </div>
       </div>
-    </div >
+      {/* Pass coinOne and coinTwo to the List component */}
+      <List coinData={selectedCoin1}/>
+      <List coinData={selectedCoin2} />
+    </div>
   );
 };
 
