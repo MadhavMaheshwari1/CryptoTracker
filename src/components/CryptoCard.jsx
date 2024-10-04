@@ -65,7 +65,7 @@ const CryptoCard = ({ coin, theme, gridLayout }) => {
         state={{ coinData: coin }}
         key={coin.id}
         ref={cardRef}
-        className={`${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'} md:py-5 md:px-6 py-2 rounded-xl flex ${gridLayout ? 'max-w-custom h-auto flex-col py-4 md:px-4 px-2' : 'grid  sm:grid-cols-[30%,20%,10%,40%] grid-cols-[55%,0%,15%,30%] justify-between items-center px-2'} border-2 border-transparent transition-colors duration-300`}
+        className={`${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'} md:py-5 md:px-6 py-2 rounded-xl flex ${gridLayout ? 'max-w-custom h-auto flex-col py-4 px-4' : 'grid  sm:grid-cols-[30%,20%,10%,40%] grid-cols-[55%,0%,15%,30%] justify-between items-center px-2'} border-2 border-transparent transition-colors duration-300`}
         onMouseEnter={handleMouseCardEnter}
         onMouseLeave={handleMouseCardLeave}
       >
