@@ -2,8 +2,14 @@ import React from 'react';
 import CryptoCard from './CryptoCard';
 import { FaCircleArrowLeft } from "react-icons/fa6";
 import { FaCircleArrowRight } from "react-icons/fa6";
+import { ToastContext } from '../context/ToastContext';
+import { useContext } from 'react';
+import Toast from './Toast'
 
 const CryptoList = ({ filteredCryptoData, noOfCoinsPerPage, start, theme, gridLayout, length, setStart }) => {
+
+  const { toasts, dismissToast} = useContext(ToastContext);
+
   return (
     <>
       <div className={`${gridLayout ? 'grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))]' : 'flex flex-col'} py-6 px-8 gap-5 w-full`}>
@@ -34,6 +40,11 @@ const CryptoList = ({ filteredCryptoData, noOfCoinsPerPage, start, theme, gridLa
           </div>
         )
       }
+      <div className="flex flex-col absolute top-28 right-10">
+        {toasts.map((toast) => (
+          <Toast key={toast.id} message={toast.message} onDismiss={() => dismissToast(toast.id)} duration={4000} />
+        ))}
+      </div>
     </>
   );
 };

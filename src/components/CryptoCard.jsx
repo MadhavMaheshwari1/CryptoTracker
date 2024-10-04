@@ -2,11 +2,13 @@ import React, { useRef, useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaRegStar, FaArrowTrendUp, FaArrowTrendDown } from "react-icons/fa6";
 import { WatchListContext } from '../context/WatchListContext';
+import { ToastContext } from '../context/ToastContext';
 
 const CryptoCard = ({ coin, theme, gridLayout }) => {
   const { addItemToWatchList, removeItemFromWatchList, watchList } = useContext(WatchListContext);
   const [added, setAdded] = useState(false);
   const [message, setMessage] = useState('');
+  const { addToast } = useContext(ToastContext);
   const cardRef = useRef(null); // Initialize ref for the card
 
   function formatNumber(value) {
@@ -23,17 +25,17 @@ const CryptoCard = ({ coin, theme, gridLayout }) => {
 
   const watchListHandler = (coinData, e) => {
     e.preventDefault();
-    e.stopPropagation(); // Prevents event propagation
+    e.stopPropagation(); // Prevent event propagation
 
     const shouldAdd = watchList.every((item) => item.name !== coinData.name);
     if (shouldAdd) {
       addItemToWatchList(coinData);
       setAdded(true);
-      setMessage(`${coinData.name} added successfully`);
+      addToast(`${coinData.name} has been added to the watchlist`);
     } else {
       removeItemFromWatchList(coinData);
       setAdded(false);
-      setMessage(`${coinData.name} removed successfully`);
+      addToast(`${coinData.name} has been removed from the watchlist`);
     }
   };
 
@@ -58,7 +60,6 @@ const CryptoCard = ({ coin, theme, gridLayout }) => {
 
   return (
     <>
-      <div className='absolute top-28 right-10 w-[200px] h-[50px]'>{message}</div>
       <Link
         to={`/Dashboard/${coin.name}`}
         state={{ coinData: { coin } }}
