@@ -129,6 +129,15 @@ body {
   /* Hides the arrows */
 }
 
+/* Grid and List responsiveness */
+@media (max-width: 370px) {
+  .max-w-custom {
+    max-width: 270px;
+  }
+  .custom-p{
+    padding-left: 20px;
+  }
+}
 
 .animate {
   animation: uppAndDown 3s linear infinite alternate;

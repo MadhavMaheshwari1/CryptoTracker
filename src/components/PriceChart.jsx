@@ -13,7 +13,6 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 
-// Register necessary ChartJS components
 ChartJS.register(
   LineElement,
   CategoryScale,
@@ -22,12 +21,12 @@ ChartJS.register(
   TimeScale,
   Tooltip,
   Legend,
-  Filler // Needed for the fill effect under the line
+  Filler
 );
 
 import { ThemeContext } from '../context/ThemeContext';
 
-const PriceChart = ({ coins, labels }) => {
+const PriceChart = ({ priceData, volumeData, marketCapData, labels }) => {
   const { theme } = useContext(ThemeContext);
   const [selectedData, setSelectedData] = useState('price'); // Track selected dataset
 
@@ -36,49 +35,41 @@ const PriceChart = ({ coins, labels }) => {
     setSelectedData(dataset);
   };
 
-  // Generate datasets based on the selected type (price, volume, marketCap) and the number of coins
-  const datasets = coins.map((coin, index) => {
-    const colorMap = ['#3B82F6', '#EF4444']; // Blue for first coin, Red for second coin
-    const backgroundColorMap = ['rgba(59, 130, 246, 0.2)', 'rgba(239, 68, 68, 0.2)']; // Corresponding background colors
-
-    let data;
-
+  // Generate the dataset based on the selected type
+  const getData = () => {
     switch (selectedData) {
       case 'price':
-        data = coin.priceData;
-        break;
+        return priceData;
       case 'volume':
-        data = coin.volumeData;
-        break;
+        return volumeData;
       case 'marketCap':
-        data = coin.marketCapData;
-        break;
+        return marketCapData;
       default:
-        data = [];
+        return [];
     }
+  };
 
-    return {
-      label: `${coin.name.slice(0,1).toUpperCase()+coin.name.slice(1)} ${selectedData.charAt(0).toUpperCase() + selectedData.slice(1)}`,
-      data,
-      borderColor: colorMap[index],  // Choose color based on coin index
-      backgroundColor: backgroundColorMap[index],
-      tension: 0.5,  // Smoother curve
-      borderWidth: 1,
-      pointRadius: 0,  // No visible points on the line
-      pointHoverRadius: 5,  // Points visible when hovered
-    };
-  });
-
-  // Data for the chart based on selected dataset
+  // Data for the chart based on the selected dataset
   const data = {
     labels,  // X-axis labels (e.g., time)
-    datasets,
+    datasets: [
+      {
+        label: `${selectedData.charAt(0).toUpperCase() + selectedData.slice(1)}`,  // Capitalize label
+        data: getData(),
+        borderColor: '#3B82F6', // Customize line color (blue)
+        backgroundColor: 'rgba(59, 130, 246, 0.2)', // Light blue background
+        tension: 0.5,  // Smoother curve
+        borderWidth: 1,
+        pointRadius: 0,  // No visible points on the line
+        pointHoverRadius: 5,  // Points visible when hovered
+      },
+    ],
   };
 
   // Determine axis color based on theme
   const axisColor = theme === 'dark' ? '#fff' : '#000';
 
-  // Chart options with background color change
+  // Chart options
   const options = {
     scales: {
       x: {
@@ -105,7 +96,7 @@ const PriceChart = ({ coins, labels }) => {
     },
     plugins: {
       legend: {
-        display: true,  // Enable legend for multiple datasets
+        display: true,  // Enable legend
       },
       tooltip: {
         enabled: true,
@@ -121,7 +112,7 @@ const PriceChart = ({ coins, labels }) => {
       },
     },
     interaction: {
-      mode: 'nearest',  // Trigger the nearest point when hovering
+      mode: 'nearest',
       intersect: false,  // Do not require direct intersection with a point to trigger hover
     },
     hover: {

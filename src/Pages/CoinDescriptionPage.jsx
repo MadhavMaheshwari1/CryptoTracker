@@ -5,7 +5,10 @@ import { FaSpinner } from "react-icons/fa6";
 import List from "../components/List";
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Toast from '../components/Toast';
 import { ThemeContext } from '../context/ThemeContext';
+import { ToastContext } from '../context/ToastContext';
+import CryptoCard from '../components/CryptoCard';
 
 const CoinDescriptionPage = () => {
   const { theme } = useContext(ThemeContext);
@@ -21,6 +24,8 @@ const CoinDescriptionPage = () => {
     return index + 1;
   }
 
+  const { toasts, dismissToast} = useContext(ToastContext);
+
   const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [timer, setTimer] = useState(0);
@@ -28,7 +33,6 @@ const CoinDescriptionPage = () => {
   const [desc, setDesc] = useState('');
 
   const { coinData } = location.state || {}; // Extract the coin data
-
   const [priceData, setPriceData] = useState([]);
   const [volumeData, setVolumeData] = useState([]);
   const [marketCapData, setMarketCapData] = useState([]);
@@ -85,11 +89,6 @@ const CoinDescriptionPage = () => {
     setLoading(true);
   }
 
-  // useEffect(() => {
-  //   const isItemInWatchList = watchList.some(item => item.name === coinData.name);
-  //   setItemAdded(isItemInWatchList);
-  // }, []);
-
   useEffect(() => {
     if (error.error) {
       const interval = setInterval(() => {
@@ -134,7 +133,12 @@ const CoinDescriptionPage = () => {
 
   return (
     <div className='max-w-[1880px] min-h-[85vh] mx-auto py-6'>
-      <List coinData={coinData} />
+      <CryptoCard
+        key={coinData.id}
+        coin={coinData}
+        theme={theme}
+        gridLayout={false}
+      />
       <div className="py-6 px-8">
         <div className="flex gap-4 items-center px-4">
           <label htmlFor="period" className="md:text-lg text-sm font-medium">Price Change in:</label>
@@ -166,7 +170,11 @@ const CoinDescriptionPage = () => {
             </button>
           )}
         </div>
-
+        <div className="flex flex-col absolute top-28 md:right-10 right-13">
+          {toasts.map((toast) => (
+            <Toast key={toast.id} message={toast.message} onDismiss={() => dismissToast(toast.id)} duration={4000} />
+          ))}
+        </div>
       </div>
     </div>
   );

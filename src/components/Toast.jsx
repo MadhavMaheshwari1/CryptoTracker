@@ -19,9 +19,10 @@ const Toast = ({ message, onDismiss, duration }) => {
   }, [duration, onDismiss]);
 
   return (
-    <div className="relative flex items-center md:w-[450px] w-[330px] md:h-[50px] h-[80px] bg-gray-100 text-gray-500 border rounded-md shadow-lg mb-2">
-      <div className="flex-grow flex items-center justify-center">{message}</div>
-      <button className="absolute right-2 text-blue-500" onClick={onDismiss}>X</button>
+    <div className="gap-4 relative flex items-center py-2 px-2 w-auto h-auto bg-gray-100 text-gray-500 border rounded-md shadow-lg mb-2 flex-col">
+      <div className="flex gap-12">
+        <div className="flex items-center justify-center">{message}</div>
+      </div>
       <div
         ref={progressBarRef}
         className="absolute bottom-0 left-0 h-1 bg-green-500 transition-all"

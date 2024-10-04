@@ -59,13 +59,13 @@ const CryptoCard = ({ coin, theme, gridLayout }) => {
   };
 
   return (
-    <>
+    <div className={`${gridLayout}?'custom-p':''`}>
       <Link
         to={`/Dashboard/${coin.name}`}
-        state={{ coinData: { coin } }}
+        state={{ coinData: coin }}
         key={coin.id}
         ref={cardRef}
-        className={`${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'} md:py-5 md:px-6 px-2 py-2 rounded-xl flex ${gridLayout ? 'h-[300px] flex-col py-4 px-4' : 'grid  sm:grid-cols-[30%,20%,10%,40%] grid-cols-[55%,0%,15%,30%] justify-between items-center'} border-2 border-transparent transition-colors duration-300`}
+        className={`${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'} md:py-5 md:px-6 py-2 rounded-xl flex ${gridLayout ? 'max-w-custom h-auto flex-col py-4 md:px-4 px-2' : 'grid  sm:grid-cols-[30%,20%,10%,40%] grid-cols-[55%,0%,15%,30%] justify-between items-center px-2'} border-2 border-transparent transition-colors duration-300`}
         onMouseEnter={handleMouseCardEnter}
         onMouseLeave={handleMouseCardLeave}
       >
@@ -81,10 +81,10 @@ const CryptoCard = ({ coin, theme, gridLayout }) => {
           </div>
           {gridLayout && (
             <div className="group relative cursor-pointer" onClick={(e) => watchListHandler(coin, e)}>
-              <div className={`flex items-center border-2 rounded-full ${changeBorder} ${added && changeBackground} lg:w-[40px] lg:h-[40px] w-[20px] h-[20px] relative`}>
+              <div className={`flex items-center border-2 rounded-full ${changeBorder} ${added && changeBackground} lg:w-[40px] lg:h-[40px] w-[35px] h-[35px] relative`}>
                 <div className={`absolute w-full h-full top-0 left-0 ${changeBackground} opacity-0 group-hover:opacity-100 transition-all rounded-full`}></div>
                 <div className={`flex justify-center items-center cursor-pointer w-[25px] lg:w-[40px] rounded-full`}>
-                  <FaRegStar className={`${changeColor} group-hover:text-white ${added && 'text-white'} absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all lg:text-md text-[12px] md:text-[18px]`} />
+                  <FaRegStar className={`${changeColor} group-hover:text-white ${added && 'text-white'} absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all lg:text-md text-[18px]`} />
                 </div>
               </div>
             </div>
@@ -125,11 +125,37 @@ const CryptoCard = ({ coin, theme, gridLayout }) => {
               </span>
             </div>
           )}
-          {gridLayout && <h1 className={`lg:text-lg ${gridLayout ? 'text-lg' : 'text-sm'} ${theme === 'dark' ? 'text-white' : 'text-black'}`}>Total Volume: ${coin.total_volume.toLocaleString()}</h1>}
-          {gridLayout && <h1 className={`lg:text-lg ${gridLayout ? 'text-lg' : 'text-sm'} ${theme === 'dark' ? 'text-white' : 'text-black'}`}>Market Cap: ${coin.market_cap.toLocaleString()}</h1>}
+          {gridLayout && <h1 className={`lg:text-lg ${gridLayout ? 'text-md' : 'text-sm'} ${theme === 'dark' ? 'text-white' : 'text-black'}`}>Total Volume: ${coin.total_volume.toLocaleString()}</h1>}
+          {gridLayout && <h1 className={`lg:text-lg ${gridLayout ? 'text-md' : 'text-sm'} ${theme === 'dark' ? 'text-white' : 'text-black'}`}>Market Cap: ${coin.market_cap.toLocaleString()}</h1>}
+          {!gridLayout && (
+            <div className='group relative md:block hidden'>
+              <h1 className={`lg:text-lg ${gridLayout ? 'text-lg' : 'text-sm'} ${theme === 'dark' ? 'text-white' : 'text-black'}`}>${formatNumber(coin.total_volume)}</h1>
+              <span className={`text-sm ${theme === 'dark' ? 'bg-gray-400' : 'bg-gray-200'} rounded-md px-2 pointer-events-none absolute -top-7 -left-5 w-max opacity-0 transition-opacity group-hover:opacity-100`}>
+                Total Volume
+              </span>
+            </div>
+          )}
+          {!gridLayout && (
+            <div className='group relative'>
+              <h1 className={`lg:text-lg ${gridLayout ? 'text-lg' : 'text-sm'} ${theme === 'dark' ? 'text-white' : 'text-black'}`}>${formatNumber(coin.market_cap)}</h1>
+              <span className={`text-sm ${theme === 'dark' ? 'bg-gray-400' : 'bg-gray-200'} rounded-md px-2 pointer-events-none absolute -top-7 -left-5 w-max opacity-0 transition-opacity group-hover:opacity-100`}>
+                Market Cap
+              </span>
+            </div>
+          )}
+          {!gridLayout && (
+            <div className="group relative cursor-pointer" onClick={(e) => watchListHandler(coin, e)}>
+              <div className={`flex items-center border-2 rounded-full ${changeBorder} ${added && changeBackground} lg:w-[40px] lg:h-[40px] w-[25px] h-[25px] relative`}>
+                <div className={`absolute w-full h-full top-0 left-0 ${changeBackground} opacity-0 group-hover:opacity-100 transition-all rounded-full`}></div>
+                <div className={`flex justify-center items-center cursor-pointer w-[25px] lg:w-[40px] rounded-full`}>
+                  <FaRegStar className={`${changeColor} group-hover:text-white ${added && 'text-white'} absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all lg:text-md text-[12px] md:text-[18px]`} />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </Link>
-    </>
+    </div>
   );
 };
 
