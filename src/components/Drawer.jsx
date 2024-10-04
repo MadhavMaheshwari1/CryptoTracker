@@ -9,7 +9,7 @@ const Drawer = ({ isOpen, onClose }) => {
 
     return (
         <div
-            className={`fixed inset-0 w-full transition-transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} z-50`}
+            className={`fixed inset-0 w-full backdrop-blur-md transition-transform ${isOpen ? 'translate-x-0' : 'translate-x-full'} z-50`}
             onClick={onClose}
         >
             <div

@@ -11,9 +11,12 @@ const WatchListProvider = ({ children }) => {
 
     const addItemToWatchList = (coinData) => {
         setWatchList((prevList) => {
-            const updatedList = [...prevList, coinData]; // Append the new item
-            localStorage.setItem('watchList', JSON.stringify(updatedList)); // Save to localStorage
-            return updatedList; // Update state
+            // Filter out existing items to ensure uniqueness by name
+            const updatedList = [...prevList.filter(item => item.name !== coinData.name), coinData];
+
+            // Save the updated list to localStorage
+            localStorage.setItem('watchList', JSON.stringify(updatedList));
+            return updatedList; // Update the state
         });
     };
 
@@ -26,7 +29,6 @@ const WatchListProvider = ({ children }) => {
             setWatchList(updatedArray);
         }
     };
-
 
     return (
         <WatchListContext.Provider value={{ watchList, addItemToWatchList, removeItemFromWatchList }}>

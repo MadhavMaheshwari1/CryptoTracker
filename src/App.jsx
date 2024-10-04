@@ -64,11 +64,11 @@ function App() {
 
       {/* Main App Content */}
       <BrowserRouter>
-      <Navbar />
+        <Navbar />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/Compare" element={<ComparePage />} />
-          <Route path="/WatchList" element={<WatchListPage  noOfCoinsPerPage={10} />} />
+          <Route path="/WatchList" element={<WatchListPage noOfCoinsPerPage={10} />} />
           <Route path="/Dashboard" element={<Dashboard noOfCoinsPerPage={10} />} />
           <Route path="/Dashboard/:CoinName" element={<CoinDescriptionPage />} />
         </Routes>
