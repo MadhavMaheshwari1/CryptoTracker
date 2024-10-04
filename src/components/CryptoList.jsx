@@ -40,7 +40,7 @@ const CryptoList = ({ filteredCryptoData, noOfCoinsPerPage, start, theme, gridLa
           </div>
         )
       }
-      <div className="flex flex-col absolute top-28 right-10">
+      <div className="flex flex-col absolute top-28 md:right-10 right-5">
         {toasts.map((toast) => (
           <Toast key={toast.id} message={toast.message} onDismiss={() => dismissToast(toast.id)} duration={4000} />
         ))}
