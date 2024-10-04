@@ -1,37 +1,52 @@
-import React from 'react'
-import { useState } from "react"
-import IPhone from "../assets/Iphone.png"
-import { Link } from 'react-router-dom'
-import Footer from './Footer'
+import React from 'react';
 
-const Hero = () => {
+const ShareButton = () => {
+  const appUrl = "https://crypto-tracker-kappa-lac.vercel.app/"; // The URL you want to share
 
-    return (
-        <>
-            <div className="max-w-[1880px] min-h-[85vh] mx-auto py-6 px-8 2xl:flex-row flex flex-col mt-4">
-                <div className="2xl:w-[50%] w-full 2xl:text-start text-center h-[500px] flex flex-col 2xl:items-start items-center justify-center gap-4 ">
-                    <div>
-                        <h1 className='font-bold 2xl:text-8xl text-5xl mb-4'>Track Crypto</h1>
-                        <h1 className='text-blue-500 font-bold 2xl:text-5xl text-4xl mb-4'>Real Time.</h1>
-                    </div>
-                    <p className='text-gray-500 lg:text-3xl text-xl mb-4'>Track crypto through a public api in real time. Visit the dashboard to do so!</p>
-                    <div className='flex gap-4'>
-                        <Link to="/Dashboard" className={`duration-300 sm:py-3 sm:px-6 px-4 py-2 bg-blue-500 text-white rounded-full transition-all hover:shadow-[0_0_10px_10px_rgba(59,130,246,0.5)] text-xl`}>Dashboard</Link>
-                        <Link to="/" className={`text-xl duration-300 sm:py-3 sm:px-6 px-4 py-2 hover:bg-blue-500 border-2 border-blue-500 rounded-full transition-all`}>Share App</Link>
-                    </div>
-                </div>
-                <div className='2xl:w-[50%] w-full flex justify-center h-[85vh] px-4'>
-                    {/* <div className="absolute flex justify-center w-full h-full items-center"> */}
-                    <div className='h-[700px] relative'>
-                        <div className='absolute w-[80%] sm:h-[500px] h-[400px] bg-gradient-to-b from-blue-300 to-blue-400  rounded-[45px] left-[5rem] top-[7rem]' alt="" ></div>
-                        <img src={IPhone} className='sm:h-[600px] h-[500px] animate rounded-[45px]' style={{ boxShadow: '0px 0px 0px 0px rgba(0, 0, 0, 0.5)' }} alt="" />
-                    </div>
+  const handleShare = async () => {
+    if (navigator.share) {
+      // Web Share API supported (mostly mobile)
+      try {
+        await navigator.share({
+          title: 'Check out this awesome app!',
+          text: 'Track crypto in real-time!',
+          url: appUrl,
+        });
+        console.log('Sharing successful');
+      } catch (error) {
+        console.error('Sharing failed:', error);
+      }
+    } else {
+      // Fallback for desktop or unsupported browsers
+      showFallback();
+    }
+  };
 
-                    {/* </div> */}
-                </div>
-            </div>
-        </>
-    )
-}
+  const showFallback = () => {
+    // Example: open a modal with sharing options or copy the URL to the clipboard
+    const fallbackModal = document.getElementById('fallbackModal');
+    fallbackModal.style.display = 'block';
+    navigator.clipboard.writeText(appUrl); // Copy URL to clipboard for the user
+    alert("The link has been copied to your clipboard! Share it manually.");
+  };
 
-export default Hero
+  return (
+    <div>
+      <button onClick={handleShare} className="share-button">
+        Share App
+      </button>
+
+      {/* Fallback Modal (can show sharing buttons here for desktop) */}
+      <div id="fallbackModal" style={{ display: 'none' }}>
+        <h2>Share via:</h2>
+        <ul>
+          <li><a href={`https://api.whatsapp.com/send?text=Check out this app! ${appUrl}`} target="_blank" rel="noopener noreferrer">WhatsApp</a></li>
+          <li><a href={`https://www.facebook.com/sharer/sharer.php?u=${appUrl}`} target="_blank" rel="noopener noreferrer">Facebook</a></li>
+          <li><a href={`https://twitter.com/share?url=${appUrl}&text=Check out this app!`} target="_blank" rel="noopener noreferrer">Twitter</a></li>
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+export default ShareButton;
