@@ -19,7 +19,7 @@ const Toast = ({ message, onDismiss, duration }) => {
   }, [duration, onDismiss]);
 
   return (
-    <div className="relative flex items-center md:w-[450px] w-[370px] h-[50px] bg-gray-100 text-gray-500 border rounded-md shadow-lg mb-2">
+    <div className="relative flex items-center md:w-[450px] w-[380px] h-[50px] bg-gray-100 text-gray-500 border rounded-md shadow-lg mb-2">
       <div className="flex-grow flex items-center justify-center">{message}</div>
       <button className="absolute right-2 text-blue-500" onClick={onDismiss}>X</button>
       <div
