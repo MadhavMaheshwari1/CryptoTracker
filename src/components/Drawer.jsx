@@ -27,7 +27,7 @@ const Drawer = ({ isOpen, onClose }) => {
                     }} onMouseLeave={(e) => {
                         e.target.style.color = theme === 'dark' ? 'gray' : 'gray'
                     }}>Compare</Link>
-                    <Link to="/WishList" className={`transition-colors duration-300`} onMouseEnter={(e) => {
+                    <Link to="/WatchList" className={`transition-colors duration-300`} onMouseEnter={(e) => {
                         e.target.style.color = theme === 'dark' ? 'white' : 'black'
                     }} onMouseLeave={(e) => {
                         e.target.style.color = theme === 'dark' ? 'gray' : 'gray'

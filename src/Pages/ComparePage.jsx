@@ -187,7 +187,7 @@ const ComparePage = () => {
 
   return (
     <div className="max-w-[1880px] mx-auto min-h-[85vh]">
-      <div className="mb-4 flex md:gap-4 items-center md:justify-start justify-between px-8">
+      <div className="mb-4 flex md:gap-4 items-center md:justify-start justify-between px-14">
         <div className="flex items-center md:gap-4">
           <h1 className='md:text-2xl text-lg md:block hidden'>Crypto1</h1>
           <select
@@ -232,7 +232,8 @@ const ComparePage = () => {
         </div>
       </div>
       {/* Pass the array of coins data to PriceChart */}
-      <div className="px-4"><PriceChart
+      <div className="px-4">
+        <PriceChart
         coins={coinData}
         labels={labels}
         period={period}
@@ -241,7 +242,7 @@ const ComparePage = () => {
       <List coinData={selectedCoin1} />
       <List coinData={selectedCoin2} />
 
-      <div className={`mb-4 coin--description px-10 md:text-xl text-[12px] ${theme === 'dark' ? 'text-gray-300' : ''} rounded-xl py-8 mx-6 me-4 ${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'}`}>
+      <div className={`mb-4 coin--description px-6 md:text-xl text-[12px] ${theme === 'dark' ? 'text-gray-300' : ''} rounded-xl py-8 mx-6 me-4 ${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'}`}>
         <p dangerouslySetInnerHTML={createMarkup(isExpanded1 ? desc1 : desc1.slice(0, indexOfNthOccurrence(desc1, '.', 2)))} />
         {desc1.length > (indexOfNthOccurrence(desc1, '.', 3)) && (
           <button
@@ -252,7 +253,7 @@ const ComparePage = () => {
           </button>
         )}
       </div>
-      <div className={`coin--description px-10 md:text-xl text-[12px] ${theme === 'dark' ? 'text-gray-300' : ''} rounded-xl py-8 mx-6 me-4 ${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'}`}>
+      <div className={`coin--description px-6 md:text-xl text-[12px] ${theme === 'dark' ? 'text-gray-300' : ''} rounded-xl py-8 mx-6 me-4 ${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'}`}>
         <p dangerouslySetInnerHTML={createMarkup(isExpanded2 ? desc2 : desc2.slice(0, indexOfNthOccurrence(desc2, '.', 2)))} />
         {desc2.length > (indexOfNthOccurrence(desc2, '.', 3)) && (
           <button

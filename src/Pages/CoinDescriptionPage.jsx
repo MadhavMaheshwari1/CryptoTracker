@@ -24,7 +24,7 @@ const CoinDescriptionPage = () => {
     return index + 1;
   }
 
-  const { toasts, dismissToast} = useContext(ToastContext);
+  const { toasts, dismissToast } = useContext(ToastContext);
 
   const location = useLocation();
   const [loading, setLoading] = useState(true);
@@ -133,12 +133,14 @@ const CoinDescriptionPage = () => {
 
   return (
     <div className='max-w-[1880px] min-h-[85vh] mx-auto py-6'>
-      <CryptoCard
-        key={coinData.id}
-        coin={coinData}
-        theme={theme}
-        gridLayout={false}
-      />
+      <div className="ps-8 pe-10">
+        <CryptoCard
+          key={coinData.id}
+          coin={coinData}
+          theme={theme}
+          gridLayout={false}
+        />
+      </div>
       <div className="py-6 px-8">
         <div className="flex gap-4 items-center px-4">
           <label htmlFor="period" className="md:text-lg text-sm font-medium">Price Change in:</label>
