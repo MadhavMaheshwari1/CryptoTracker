@@ -1,4 +1,3 @@
-import React from 'react';
 import CryptoCard from '../CryptoInfo/CryptoCard';
 import { FaCircleArrowLeft } from "react-icons/fa6";
 import { FaCircleArrowRight } from "react-icons/fa6";

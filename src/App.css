@@ -11,6 +11,7 @@
   --text-color: #000000;
 }
 
+/* Helped enable dark theme */
 [data-theme='dark'] {
   --bg-color: #000000;
   --text-color: #ffffff;
@@ -22,6 +23,7 @@ body {
 }
 
 /* Checkbox and Ball styling */
+
 .checkbox {
   opacity: 0;
   position: absolute;
@@ -60,6 +62,9 @@ body {
 .ball:hover {
   box-shadow: 0 0 0px 12px rgba(141, 141, 141, 0.5);
 }
+
+/* CheckBox in Drawer, created a new class because id should be different for both
+  buttons so that each one of them should be independent of each other */
 
 .Checkbox {
   opacity: 0;
@@ -134,10 +139,13 @@ body {
   .max-w-custom {
     max-width: 270px;
   }
-  .custom-p{
+
+  .custom-p {
     padding-left: 20px;
   }
 }
+
+/* Animation for Iphone on Home Page */
 
 .animate {
   animation: uppAndDown 3s linear infinite alternate;
@@ -152,6 +160,8 @@ body {
     transform: translateY(20px);
   }
 }
+
+/* Transition for Custom Cursor */
 
 .cursor--custom {
   transition-timing-function: ease-out;

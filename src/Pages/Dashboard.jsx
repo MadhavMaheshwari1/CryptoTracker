@@ -1,24 +1,43 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { ThemeContext } from '../contexts/ThemeContext';
 import SearchInput from '../components/Dashboard/SearchInput';
 import LayoutToggle from '../components/CryptoInfo/LayoutToogle';
 import CryptoList from '../components/CryptoInfo/CryptoList';
 import { FaSpinner } from "react-icons/fa6";
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const Dashboard = ({ noOfCoinsPerPage = 10 }) => {
 
   const [cryptoData, setCryptoData] = useState([]);
   const [filteredCryptoData, setFilteredCryptoData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [retryCount, setRetryCount] = useState(0);
   const { theme } = useContext(ThemeContext);
   const [gridLayout, setGridLayout] = useState(true);
+  const [timer, setTimer] = useState(0);
   const [error, setError] = useState({ error: false, errorMessage: null });
   const [start, setStart] = useState(1);
 
   useEffect(() => {
     fetchCryptoData();
   }, []);
+
+  useEffect(() => {
+    if (error.error) {
+      const interval = setInterval(() => {
+        setTimer((prevTimer) => {
+          if (prevTimer >= 1) {
+            return prevTimer - 1; // Decrease timer
+          } else {
+            clearInterval(interval);
+            return 0; // Ensure timer stays at 0
+          }
+        });
+      }, 1000);
+      return () => clearInterval(interval); // Clean up interval on component unmount
+    }
+  }, [error.error, retryCount]);
 
   const fetchCryptoData = async () => {
     const cachedData = localStorage.getItem('cryptoData');
@@ -57,7 +76,7 @@ const Dashboard = ({ noOfCoinsPerPage = 10 }) => {
       localStorage.setItem('cryptoDataTimestamp', currentTime.toString()); // Save the timestamp
       setLoading(false);
     } catch (err) {
-      // setTimer(10);
+      setTimer(30);
       setError(() => {
         return ({ error: true, errorMessage: err.message })
       });
@@ -68,6 +87,8 @@ const Dashboard = ({ noOfCoinsPerPage = 10 }) => {
   const retryHandler = () => {
     fetchCryptoData();
     setLoading(true);
+    setRetryCount(prev => prev + 1);
+    setTimer(30);
   };
 
   const inputSearchHandler = (value) => {
@@ -80,9 +101,20 @@ const Dashboard = ({ noOfCoinsPerPage = 10 }) => {
 
   if (error.error) {
     return (
-      <div className="error-screen">
-        <p>Error: {error.errorMessage}</p>
-        <button onClick={retryHandler}>Retry</button>
+      <div className="grid h-screen place-content-center px-4">
+        <div className="text-center">
+          <p className="text-3xl font-bold tracking-tight text-gray-600 sm:text-7xl">Uh-oh!</p>
+          <p className="mt-4 text-xl text-gray-500">{error.errorMessage}</p>
+          <p className="mt-4 text-gray-500 text-xl">Retry after: {timer} seconds</p>
+          <div className="flex flex-col gap-4 text-xl">
+            <Link
+              to="/"
+              className="mt-6 inline-block rounded bg-indigo-600 px-5 py-3 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring"
+            >
+              Go Back Home
+            </Link>
+            {timer === 0 && (<button className="bg-indigo-600 py-2 px-4 rounded-md hover:bg-indigo-700" onClick={() => retryHandler()}>Retry</button>)}</div>
+        </div>
       </div>
     );
   }

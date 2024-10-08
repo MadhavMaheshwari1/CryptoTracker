@@ -1,5 +1,3 @@
-import React from 'react';
-
 const LayoutToggle = ({ gridLayout, setGridLayout }) => {
   return (
     <div className="flex w-full px-8">

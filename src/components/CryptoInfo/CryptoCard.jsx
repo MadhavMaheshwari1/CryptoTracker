@@ -1,4 +1,4 @@
-import React, { useRef, useContext, useState } from 'react';
+import { useRef, useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaRegStar, FaArrowTrendUp, FaArrowTrendDown } from "react-icons/fa6";
 import { WatchListContext } from '../../contexts/WatchListContext';

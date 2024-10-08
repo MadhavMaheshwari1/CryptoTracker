@@ -1,24 +1,10 @@
-import { useState } from 'react';
 import IPhone from "../../assets/Iphone.png";
 import { Link } from 'react-router-dom';
-import Toast from "../Dashboard/Toast";
 
 const Hero = () => {
-    const [showToast, setShowToast] = useState(false);
 
     const handleShare = async () => {
         const appUrl = 'https://crypto-tracker-kappa-lac.vercel.app/';
-
-        const waitForVisibilityChange = () =>
-            new Promise((resolve) => {
-                const handleVisibilityChange = () => {
-                    if (document.visibilityState === 'visible') {
-                        resolve();
-                        document.removeEventListener('visibilitychange', handleVisibilityChange);
-                    }
-                };
-                document.addEventListener('visibilitychange', handleVisibilityChange);
-            });
 
         try {
             if (navigator.share) {
@@ -28,26 +14,10 @@ const Hero = () => {
                     text: 'Track crypto in real-time with this awesome app!',
                     url: appUrl,
                 });
-
-                console.log('App link shared successfully');
-
-                // Wait for user to come back to the page after sharing
-                await waitForVisibilityChange();
-
-                // Show the toast when they come back
-                setShowToast(true);
-                setTimeout(() => setShowToast(false), 5000); // Hide the toast after 5 seconds
             } else {
                 // Fallback for browsers that don't support Web Share API
                 await navigator.clipboard.writeText(appUrl);
                 alert('Sharing not supported in your browser, but the link has been copied to your clipboard!');
-
-                // Wait for user to come back after copying
-                await waitForVisibilityChange();
-
-                // Show the toast when they come back
-                setShowToast(true);
-                setTimeout(() => setShowToast(false), 5000); // Hide the toast after 5 seconds
             }
         } catch (error) {
             console.log('Error sharing:', error);
@@ -78,11 +48,6 @@ const Hero = () => {
                     </div>
                 </div>
             </div>
-            {showToast && (
-                <div className="fixed top-10 left-1/2 transform -translate-x-1/2 z-50">
-                    <Toast message="App link shared successfully!" onDismiss={() => setShowToast(false)} duration={5000} />
-                </div>
-            )}
         </>
     );
 };

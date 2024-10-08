@@ -9,7 +9,6 @@ import {
   TimeScale,
   Tooltip,
   Legend,
-  Filler,
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 
@@ -20,8 +19,7 @@ ChartJS.register(
   PointElement,
   TimeScale,
   Tooltip,
-  Legend,
-  Filler
+  Legend
 );
 
 import { ThemeContext } from '../../contexts/ThemeContext';
@@ -29,6 +27,19 @@ import { ThemeContext } from '../../contexts/ThemeContext';
 const PriceChart = ({ priceData, volumeData, marketCapData, labels }) => {
   const { theme } = useContext(ThemeContext);
   const [selectedData, setSelectedData] = useState('price'); // Track selected dataset
+
+  // Define colors for datasets based on Tailwind CSS colors
+  const datasetColors = {
+    price: {
+      borderColor: '#3B82F6', // Tailwind blue-500
+    },
+    volume: {
+      borderColor: '#34D399', // Tailwind green-500
+    },
+    marketCap: {
+      borderColor: '#F87171', // Tailwind red-500
+    },
+  };
 
   // Function to handle dynamic dataset selection
   const handleDataSelection = (dataset) => {
@@ -56,10 +67,10 @@ const PriceChart = ({ priceData, volumeData, marketCapData, labels }) => {
       {
         label: `${selectedData.charAt(0).toUpperCase() + selectedData.slice(1)}`,  // Capitalize label
         data: getData(),
-        borderColor: '#3B82F6', // Customize line color (blue)
-        backgroundColor: 'rgba(59, 130, 246, 0.2)', // Light blue background
+        borderColor: datasetColors[selectedData].borderColor, // Set dynamic border color
+        fill: false,  // No filling under the line
         tension: 0.5,  // Smoother curve
-        borderWidth: 1,
+        borderWidth: 2,  // Thicker border for visibility
         pointRadius: 0,  // No visible points on the line
         pointHoverRadius: 5,  // Points visible when hovered
       },
@@ -96,7 +107,26 @@ const PriceChart = ({ priceData, volumeData, marketCapData, labels }) => {
     },
     plugins: {
       legend: {
-        display: true,  // Enable legend
+        display: true,
+        labels: {
+          // Customize legend color based on the selected dataset
+          generateLabels: (chart) => {
+            const originalLabels = ChartJS.defaults.plugins.legend.labels.generateLabels(chart);
+            return originalLabels.map((label) => {
+              if (label.text === 'Price') {
+                label.strokeStyle = datasetColors.price.borderColor; // Set border color
+                label.fillStyle = 'transparent'; // Set fill to transparent (or omit this line)
+              } else if (label.text === 'Volume') {
+                label.strokeStyle = datasetColors.volume.borderColor; // Set border color
+                label.fillStyle = 'transparent'; // Set fill to transparent (or omit this line)
+              } else if (label.text === 'Market Cap') {
+                label.strokeStyle = datasetColors.marketCap.borderColor; // Set border color
+                label.fillStyle = 'transparent'; // Set fill to transparent (or omit this line)
+              }
+              return label;
+            });
+          },
+        },
       },
       tooltip: {
         enabled: true,

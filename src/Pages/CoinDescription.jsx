@@ -11,6 +11,7 @@ import CryptoCard from '../components/CryptoInfo/CryptoCard';
 
 const CoinDescriptionPage = () => {
   const { theme } = useContext(ThemeContext);
+  const [retryCount, setRetryCount] = useState(0);
 
   function indexOfNthOccurrence(str, char, n) {
     let index = -1;
@@ -67,10 +68,11 @@ const CoinDescriptionPage = () => {
       setLabels(dates);
       setLoading(false);
     } catch (err) {
-      setTimer(10);
+      setTimer(30);
       setError(() => {
         return ({ error: true, errorMessage: err.message })
       });
+      setLoading(false);
       console.error('Error fetching historical data:', error);
     }
   };
@@ -86,6 +88,8 @@ const CoinDescriptionPage = () => {
   const retryHandler = () => {
     fetchHistoricalData();
     setLoading(true);
+    setRetryCount(prev => prev + 1);
+    setTimer(30);
   }
 
   useEffect(() => {
@@ -103,7 +107,7 @@ const CoinDescriptionPage = () => {
       }, 1000);
       return () => clearInterval(interval); // Clean up interval on component unmount
     }
-  }, [error]);
+  }, [error.error, retryCount]);
 
 
   if (loading) {
