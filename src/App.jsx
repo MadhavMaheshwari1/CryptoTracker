@@ -3,12 +3,11 @@ import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import HomePage from './Pages/HomePage';
 import Dashboard from './Pages/Dashboard';
 import WatchListPage from './Pages/WatchListPage';
-import { useEffect, useRef } from 'react';
-import { ThemeContext } from './context/ThemeContext';
-import CoinDescriptionPage from './Pages/CoinDescriptionPage';
-import { useContext } from 'react';
-import Footer from './components/Footer';
-import Navbar from './components/Navbar';
+import { useEffect, useRef, useContext } from 'react';
+import { ThemeContext } from './contexts/ThemeContext';
+import CoinDescriptionPage from './Pages/CoinDescription';
+import Footer from './components/Home/Footer';
+import Navbar from './components/Home/Navbar';
 
 function App() {
   const mousePosition = useRef({ x: 0, y: 0 });

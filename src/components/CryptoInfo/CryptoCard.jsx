@@ -1,13 +1,12 @@
 import React, { useRef, useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaRegStar, FaArrowTrendUp, FaArrowTrendDown } from "react-icons/fa6";
-import { WatchListContext } from '../context/WatchListContext';
-import { ToastContext } from '../context/ToastContext';
+import { WatchListContext } from '../../contexts/WatchListContext';
+import { ToastContext } from '../../contexts/ToastContext';
 
 const CryptoCard = ({ coin, theme, gridLayout }) => {
   const { addItemToWatchList, removeItemFromWatchList, watchList } = useContext(WatchListContext);
   const [added, setAdded] = useState(false);
-  const [message, setMessage] = useState('');
   const { addToast } = useContext(ToastContext);
   const cardRef = useRef(null); // Initialize ref for the card
 

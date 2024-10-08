@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -24,7 +24,7 @@ ChartJS.register(
   Filler
 );
 
-import { ThemeContext } from '../context/ThemeContext';
+import { ThemeContext } from '../../contexts/ThemeContext';
 
 const PriceChart = ({ priceData, volumeData, marketCapData, labels }) => {
   const { theme } = useContext(ThemeContext);

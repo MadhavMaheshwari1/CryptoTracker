@@ -1,8 +1,8 @@
 import { useState, React, useEffect } from 'react';
 import { Link } from 'react-router-dom'
 import { FaBars } from "react-icons/fa6";
-import Drawer from './Drawer';
-import { ThemeContext } from '../context/ThemeContext';
+import Drawer from '../Home/Drawer';
+import { ThemeContext } from '../../contexts/ThemeContext';
 import { useContext } from 'react';
 
 const Navbar = () => {

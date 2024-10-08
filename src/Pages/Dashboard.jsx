@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { ThemeContext } from '../context/ThemeContext';
-import SearchInput from '../components/SearchInput';
-import LayoutToggle from '../components/LayoutToogle';
-import CryptoList from '../components/CryptoList';
-import { WatchListContext } from '../context/WatchListContext';
+import { ThemeContext } from '../contexts/ThemeContext';
+import SearchInput from '../components/Dashboard/SearchInput';
+import LayoutToggle from '../components/CryptoInfo/LayoutToogle';
+import CryptoList from '../components/CryptoInfo/CryptoList';
 import { FaSpinner } from "react-icons/fa6";
 import axios from 'axios';
 

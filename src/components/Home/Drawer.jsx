@@ -1,6 +1,5 @@
-import { ThemeContext } from '../context/ThemeContext';
+import { ThemeContext } from '../../contexts/ThemeContext';
 import { useContext } from 'react';
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Drawer = ({ isOpen, onClose }) => {

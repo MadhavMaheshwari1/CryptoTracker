@@ -1,14 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
-import PriceChart from '../components/PriceChart'; // Import the area chart component
+import PriceChart from '../components/Chart/PriceChart'; // Import the area chart component
 import { FaSpinner } from "react-icons/fa6";
-import List from "../components/List";
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import Toast from '../components/Toast';
-import { ThemeContext } from '../context/ThemeContext';
-import { ToastContext } from '../context/ToastContext';
-import CryptoCard from '../components/CryptoCard';
+import Toast from '../components/Dashboard/Toast';
+import { ThemeContext } from '../contexts/ThemeContext';
+import { ToastContext } from '../contexts/ToastContext';
+import CryptoCard from '../components/CryptoInfo/CryptoCard';
 
 const CoinDescriptionPage = () => {
   const { theme } = useContext(ThemeContext);

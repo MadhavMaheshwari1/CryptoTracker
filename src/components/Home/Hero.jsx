@@ -1,34 +1,57 @@
-import React from 'react';
-import { useState } from "react";
-import IPhone from "../assets/Iphone.png";
+import { useState } from 'react';
+import IPhone from "../../assets/Iphone.png";
 import { Link } from 'react-router-dom';
-import Footer from './Footer';
+import Toast from "../Dashboard/Toast";
 
 const Hero = () => {
+    const [showToast, setShowToast] = useState(false);
 
     const handleShare = async () => {
-        const appUrl = 'https://crypto-tracker-kappa-lac.vercel.app/'; // Replace with your actual app URL
+        const appUrl = 'https://crypto-tracker-kappa-lac.vercel.app/';
 
-        if (navigator.share) {
-            try {
+        const waitForVisibilityChange = () =>
+            new Promise((resolve) => {
+                const handleVisibilityChange = () => {
+                    if (document.visibilityState === 'visible') {
+                        resolve();
+                        document.removeEventListener('visibilitychange', handleVisibilityChange);
+                    }
+                };
+                document.addEventListener('visibilitychange', handleVisibilityChange);
+            });
+
+        try {
+            if (navigator.share) {
+                // Use the Web Share API if available
                 await navigator.share({
                     title: 'Check out this cool Crypto Tracking App!',
                     text: 'Track crypto in real-time with this awesome app!',
                     url: appUrl,
                 });
+
                 console.log('App link shared successfully');
-            } catch (error) {
-                console.log('Error sharing:', error);
-            }
-        } else {
-            // Fallback for browsers that don't support Web Share API
-            try {
+
+                // Wait for user to come back to the page after sharing
+                await waitForVisibilityChange();
+
+                // Show the toast when they come back
+                setShowToast(true);
+                setTimeout(() => setShowToast(false), 5000); // Hide the toast after 5 seconds
+            } else {
+                // Fallback for browsers that don't support Web Share API
                 await navigator.clipboard.writeText(appUrl);
                 alert('Sharing not supported in your browser, but the link has been copied to your clipboard!');
-            } catch (error) {
-                console.log('Failed to copy the link: ', error);
-                alert('Sharing not supported in your browser. Please copy and share the link manually!');
+
+                // Wait for user to come back after copying
+                await waitForVisibilityChange();
+
+                // Show the toast when they come back
+                setShowToast(true);
+                setTimeout(() => setShowToast(false), 5000); // Hide the toast after 5 seconds
             }
+        } catch (error) {
+            console.log('Error sharing:', error);
+            alert('Failed to share or copy the link. Please try again!');
         }
     };
 
@@ -50,11 +73,16 @@ const Hero = () => {
                 </div>
                 <div className='2xl:w-[50%] w-full flex justify-center h-[85vh] px-4'>
                     <div className='h-[700px] relative'>
-                        <div className='absolute w-[80%] sm:h-[500px] h-[400px] bg-gradient-to-b from-blue-300 to-blue-400 rounded-[45px] left-[5rem] top-[7rem]' alt="" ></div>
+                        <div className='absolute w-[80%] sm:h-[500px] h-[400px] bg-gradient-to-b from-blue-300 to-blue-400 rounded-[45px] left-[5rem] top-[7rem]'></div>
                         <img src={IPhone} className='sm:h-[600px] h-[500px] animate rounded-[45px]' style={{ boxShadow: '0px 0px 0px 0px rgba(0, 0, 0, 0.5)' }} alt="" />
                     </div>
                 </div>
             </div>
+            {showToast && (
+                <div className="fixed top-10 left-1/2 transform -translate-x-1/2 z-50">
+                    <Toast message="App link shared successfully!" onDismiss={() => setShowToast(false)} duration={5000} />
+                </div>
+            )}
         </>
     );
 };
