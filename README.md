@@ -1,6 +1,6 @@
 ## Overview
 
-The **The CryptoTracker** allows users to track the top 100 cryptocurrencies in real-time. With an intuitive interface, users can easily view price changes, market capitalization, and trading volume for each cryptocurrency.
+The **CryptoTracker** allows users to track the top 100 cryptocurrencies in real-time. With an intuitive interface, users can easily view price changes, market capitalization, and trading volume for each cryptocurrency.
 
 ## Features
 
