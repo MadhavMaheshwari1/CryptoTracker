@@ -111,7 +111,7 @@ const CoinDescriptionPage = () => {
 
 
   if (loading) {
-    return <div className='w-[90vw] h-[100vh] flex justify-center items-center animate-spin'><FaSpinner size={102} /></div>;
+    return <div className='w-full h-[100vh] flex justify-center items-center animate-spin'><FaSpinner size={102} /></div>;
   }
 
   if (error.error) {
@@ -165,7 +165,7 @@ const CoinDescriptionPage = () => {
           <PriceChart priceData={priceData} volumeData={volumeData} marketCapData={marketCapData} labels={labels} />
         </div>
         <div className={`coin--description px-10 md:text-xl text-[12px] ${theme === 'dark' ? 'text-gray-300' : ''} rounded-xl py-8 mx-6 me-4 ${theme === 'dark' ? 'bg-[#1B1B1B]' : 'bg-gray-100'}`}>
-          <p dangerouslySetInnerHTML={createMarkup(isExpanded ? desc : desc.slice(0, indexOfNthOccurrence(desc, '.', 2)))} />
+          <p dangerouslySetInnerHTML={createMarkup(isExpanded ? desc : desc.slice(0, indexOfNthOccurrence(desc, '.',3)))} />
           {desc.length > (indexOfNthOccurrence(desc, '.', 3)) && (
             <button
               onClick={toggleReadMore}
