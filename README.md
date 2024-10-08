@@ -7,6 +7,9 @@ The **CryptoTracker** allows users to track the top 100 cryptocurrencies in real
 - **Real-Time Data**: Get live updates on the top 100 cryptocurrencies.
 - **Search Functionality**: Easily search for specific cryptocurrencies.
 - **User-Friendly Interface**: Simple and clean design for seamless navigation.
+- **Dark Mode**: Toggle between light and dark themes for comfortable viewing in various lighting conditions.
+- **Chart Representation**: Visualize cryptocurrency trends with interactive charts to analyze price movements over time.
+- **Watchlist**: Add your favorite cryptocurrencies to a personalized watchlist for quick access to their performance.
 
 ## Screenshots
 
