@@ -22,16 +22,11 @@ const Drawer = ({ isOpen, onClose }) => {
                     }} onMouseLeave={(e) => {
                         e.target.style.color = theme === 'dark' ? 'gray' : 'gray'
                     }}>Home</Link>
-                    <Link to="/Compare" className={`transition-colors duration-300`} onMouseEnter={(e) => {
-                        e.target.style.color = theme === 'dark' ? 'white' : 'black'
-                    }} onMouseLeave={(e) => {
-                        e.target.style.color = theme === 'dark' ? 'gray' : 'gray'
-                    }}>Compare</Link>
                     <Link to="/WatchList" className={`transition-colors duration-300`} onMouseEnter={(e) => {
                         e.target.style.color = theme === 'dark' ? 'white' : 'black'
                     }} onMouseLeave={(e) => {
                         e.target.style.color = theme === 'dark' ? 'gray' : 'gray'
-                    }}>WishList</Link>
+                    }}>WatchList</Link>
                     <Link to="/Dashboard" className={`transition-colors duration-300`} onMouseEnter={(e) => {
                         e.target.style.color = theme === 'dark' ? 'white' : 'black'
                     }} onMouseLeave={(e) => {
