@@ -13,5 +13,10 @@ The **CryptoTracker** allows users to track the top 100 cryptocurrencies in real
 
 ## Screenshots
 
-![Screenshot of Cryptocurrency Tracker](src/assets/Screenshot1.png)  <!-- Replace with the path to your screenshot -->
-![Screenshot of Cryptocurrency Details](src/assets/Screenshot2.png)  <!-- Replace with the path to your screenshot -->
+![Screenshot of Cryptocurrency Tracker](src/assets/Screenshot1.png)
+![Screenshot of Cryptocurrency Details](src/assets/Screenshot2.png)
+
+## Acknowledgements
+- [CoinGecko API](https://www.coingecko.com/en/api) for providing cryptocurrency data.
+- Design credits [Dribbble](https://dribbble.com) for the design inspiration.
+
